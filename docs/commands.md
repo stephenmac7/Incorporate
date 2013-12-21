@@ -121,3 +121,20 @@ List applicants
 Usage: /inc applicants &lt;company&gt;
 Alias: appl
 Permission: HIRE
+
+## Money Commands
+#### deposit
+Deposit money
+Usage: /inc deposit &lt;company&gt; &lt;console: player&gt; &lt;amount&gt;
+
+#### withdrawal
+Withdrawal money
+Usage: /inc withdrawal &lt;company&gt; &lt;console: player&gt; &lt;amount&gt;
+Alias: wd
+Permission: WITHDRAWAL
+
+#### getBalance
+Get company balance
+Usage: /inc getBalance &lt;company&gt;
+Alias: gb
+Permission: GETBALANCE

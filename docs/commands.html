@@ -1,44 +1,52 @@
-<h2 id="general-company-commands">General Company Commands</h2>
+<h1 id="general-company-commands">General Company Commands</h1>
 <p>All commands have the structure /inc &lt;action&gt; [arguments]</p>
 <h4 id="list">list</h4>
 <p>Lists all the companies currently in the game.<br />Usage: /inc list</p>
 <h4 id="create">create</h4>
-<p>Creates a new company.<br />Usage: /inc create &lt;company&gt;</p>
+<p>Creates a new company.<br />Usage: /inc create &lt;company&gt; &lt;console: player&gt;</p>
 <h4 id="delete">delete</h4>
 <p>Delete a company.<br />Usage: /inc delete &lt;company&gt;<br />Permission: DELETE</p>
 <h4 id="rename">rename</h4>
 <p>Rename a company.<br />Usage: /inc rename &lt;company&gt; &lt;newName&gt;<br />Permission: RENAME</p>
 <h2 id="rank-commands">Rank Commands</h2>
 <h4 id="listranks">listRanks</h4>
-<p>List the ranks in a company.<br />Usage: /inc listRanks &lt;company&gt;<br />Aliases: lr listranks</p>
+<p>List the ranks in a company.<br />Usage: /inc listRanks &lt;company&gt;<br />Alias: lr</p>
 <h4 id="addrank">addRank</h4>
-<p>Adds a rank to a company.<br />Usage: /inc addRank &lt;company&gt; &lt;rank&gt; &lt;wage&gt;<br />Aliases: ar addrank<br />Permission: MANAGERANKS</p>
+<p>Adds a rank to a company.<br />Usage: /inc addRank &lt;company&gt; &lt;rank&gt; &lt;wage&gt;<br />Alias: ar<br />Permission: MANAGERANKS</p>
 <h4 id="removerank">removeRank</h4>
-<p>Removes an existing rank from a company.<br />Usage: /inc removeRank &lt;company&gt; &lt;rank&gt;<br />Aliases: rr removerank<br />Permission: MANAGERANKS</p>
+<p>Removes an existing rank from a company.<br />Usage: /inc removeRank &lt;company&gt; &lt;rank&gt;<br />Alias: rr<br />Permission: MANAGERANKS</p>
 <h4 id="getwage">getWage</h4>
-<p>Gets teh wage of a rank<br />Usage: /inc getWage &lt;comapny&gt; &lt;rank&gt;<br />Aliases: gw getwage</p>
+<p>Gets teh wage of a rank<br />Usage: /inc getWage &lt;comapny&gt; &lt;rank&gt;<br />Alias: gw</p>
 <h4 id="setwage">setWage</h4>
-<p>Sets the wage of a rank<br />Usage: /inc setWage &lt;company&gt; &lt;rank&gt; &lt;wage&gt;<br />Aliases: sw setwage<br />Permission: MANAGERANKS</p>
-<h4 id="getdefaultrank">getDefaultRank</h4>
-<p>Gets the default rank of a company. The default rank in the company is the rank of new employees and of employees whose rank has been removed.<br />Usage: /inc getDefaultRank &lt;company&gt;</p>
-<h4 id="setdefaultrank">setDefaultRank</h4>
-<p>Sets the default rank of a company. Rank must exist.<br />Usage: /inc setDefaultRank &lt;company&gt; &lt;rank&gt;<br />Permission: MANAGERANKS</p>
+<p>Sets the wage of a rank<br />Usage: /inc setWage &lt;company&gt; &lt;rank&gt; &lt;wage&gt;<br />Alias: sw<br />Permission: MANAGERANKS</p>
+<h4 id="getdrank">getDRank</h4>
+<p>Gets the default rank of a company. The default rank in the company is the rank of new employees and of employees whose rank has been removed.<br />Usage: /inc getDRank &lt;company&gt;</p>
+<h4 id="setdrank">setDRank</h4>
+<p>Sets the default rank of a company. Rank must exist.<br />Usage: /inc setDRank &lt;company&gt; &lt;rank&gt;<br />Permission: MANAGERANKS</p>
 <h3 id="permissions">Permissions</h3>
 <h4 id="grantperm">grantPerm</h4>
-<p>Grants a permission to a specific rank.<br />Usage: /inc grantPerm &lt;company&gt; &lt;rank&gt; &lt;permission&gt;<br />Aliases: gp grantperm<br />Permission: MANAGERANKS</p>
+<p>Grants a permission to a specific rank.<br />Usage: /inc grantPerm &lt;company&gt; &lt;rank&gt; &lt;permission&gt;<br />Alias: gp<br />Permission: MANAGERANKS</p>
 <h4 id="revokeperm">revokePerm</h4>
-<p>Revokes a permission from a specific rank.<br />Usage: /inc revokePerm &lt;company&gt; &lt;rank&gt; &lt;permission&gt;<br />Aliases: rp revokeperm<br />Permission: MANAGERANKS</p>
+<p>Revokes a permission from a specific rank.<br />Usage: /inc revokePerm &lt;company&gt; &lt;rank&gt; &lt;permission&gt;<br />Alias: rp<br />Permission: MANAGERANKS</p>
+<h4 id="listperms">listPerms</h4>
+<p>Lists a rank's permissions<br />Usage: /inc listPerms &lt;company&gt; &lt;rank&gt;<br />Alias: lp</p>
 <h2 id="employee-commands">Employee Commands</h2>
 <h4 id="getrank">getRank</h4>
-<p>Gets an employee's rank<br />Usage: /inc getRank &lt;company&gt; &lt;employee&gt;<br />Aliases: gr getrank<br />Permission: MANAGEEMPLOYEES</p>
+<p>Gets an employee's rank<br />Usage: /inc getRank &lt;company&gt; &lt;employee&gt;<br />Alias: gr<br />Permission: MANAGEEMPLOYEES</p>
 <h4 id="setrank">setRank</h4>
-<p>Sets an employee's rank<br />Usage: /inc setRank &lt;company&gt; &lt;employee&gt; &lt;rank&gt;<br />Aliases: sr setRank<br />Permission: MANAGEEMPLOYEES</p>
+<p>Sets an employee's rank<br />Usage: /inc setRank &lt;company&gt; &lt;employee&gt; &lt;rank&gt;<br />Alias: sr<br />Permission: MANAGEEMPLOYEES</p>
 <h4 id="fire">fire</h4>
 <p>Fires an employee<br />Usage: /inc fire &lt;company&gt; &lt;employee&gt;<br />Permission: FIRE</p>
+<h4 id="resign">resign</h4>
+<p>Leave a company<br />Usage: /inc resign &lt;company&gt; &lt;console: player&gt;</p>
+<h4 id="employees">employees</h4>
+<p>List employees<br />Usage: /inc employees &lt;company&gt;<br />Alias: empl</p>
 <h2 id="applicant-commands">Applicant Commands</h2>
 <h4 id="apply">apply</h4>
-<p>Apply to a company<br />Usage: /inc apply &lt;company&gt;</p>
+<p>Apply to a company<br />Usage: /inc apply &lt;company&gt; &lt;console: player&gt;</p>
 <h4 id="reject">reject</h4>
 <p>Reject an applicant<br />Usage: /inc reject &lt;company&gt; &lt;applicant&gt;<br />Permission: HIRE</p>
 <h4 id="hire">hire</h4>
 <p>Hire an applicant<br />Usage: /inc hire &lt;company&gt; &lt;applicant&gt;<br />Permission: HIRE</p>
+<h4 id="applicants">applicants</h4>
+<p>List applicants<br />Usage: /inc applicants &lt;company&gt;<br />Alias: appl<br />Permission: HIRE</p>

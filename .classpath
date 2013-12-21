@@ -15,5 +15,5 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="/home/stephen/.gradle/caches/modules-2/files-2.1/org.bukkit/bukkit/1.6.4-R2.0/5d9ca64eb20c079152c83fe847efb609200b10b4/bukkit-1.6.4-R2.0.jar" exported="true"/>
-	<classpathentry kind="lib" path="/home/stephen/Development/Eclipse/lib/Vault.jar" exported="true"/>
+	<classpathentry kind="lib" path="/home/stephen/Development/Eclipse/Incorporate/lib/Vault.jar" exported="true"/>
 </classpath>
