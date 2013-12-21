@@ -21,7 +21,7 @@ dependencies {
     compile 'org.mongodb.morphia:morphia:0.105'
     compile 'org.mongodb:mongo-java-driver:2.11.3'
     compile 'org.bukkit:bukkit:1.6.4-R2.0'
-    compile files('../lib/Vault.jar')
+    compile files('lib/Vault.jar')
 }
 
 task copyToServer(dependsOn: 'jar', type: Copy) {
