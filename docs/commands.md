@@ -1,4 +1,4 @@
-## General Company Commands
+# General Company Commands
 All commands have the structure /inc &lt;action&gt; [arguments]
 #### list
 Lists all the companies currently in the game.
@@ -6,7 +6,7 @@ Usage: /inc list
 
 #### create
 Creates a new company.
-Usage: /inc create &lt;company&gt;
+Usage: /inc create &lt;company&gt; &lt;console: player&gt;
 
 #### delete
 Delete a company.
@@ -22,64 +22,69 @@ Permission: RENAME
 #### listRanks
 List the ranks in a company.
 Usage: /inc listRanks &lt;company&gt;
-Aliases: lr listranks
+Alias: lr
 
 #### addRank
 Adds a rank to a company.
 Usage: /inc addRank &lt;company&gt; &lt;rank&gt; &lt;wage&gt;
-Aliases: ar addrank
+Alias: ar
 Permission: MANAGERANKS
 
 #### removeRank
 Removes an existing rank from a company.
 Usage: /inc removeRank &lt;company&gt; &lt;rank&gt;
-Aliases: rr removerank
+Alias: rr
 Permission: MANAGERANKS
 
 #### getWage
 Gets teh wage of a rank
 Usage: /inc getWage &lt;comapny&gt; &lt;rank&gt;
-Aliases: gw getwage
+Alias: gw
 
 #### setWage
 Sets the wage of a rank
 Usage: /inc setWage &lt;company&gt; &lt;rank&gt; &lt;wage&gt;
-Aliases: sw setwage
+Alias: sw
 Permission: MANAGERANKS
 
-#### getDefaultRank
+#### getDRank
 Gets the default rank of a company. The default rank in the company is the rank of new employees and of employees whose rank has been removed.
-Usage: /inc getDefaultRank &lt;company&gt;
+Usage: /inc getDRank &lt;company&gt;
 
-#### setDefaultRank
+#### setDRank
 Sets the default rank of a company. Rank must exist.
-Usage: /inc setDefaultRank &lt;company&gt; &lt;rank&gt;
+Usage: /inc setDRank &lt;company&gt; &lt;rank&gt;
 Permission: MANAGERANKS
 
 ### Permissions
 #### grantPerm
 Grants a permission to a specific rank.
 Usage: /inc grantPerm &lt;company&gt; &lt;rank&gt; &lt;permission&gt;
-Aliases: gp grantperm
+Alias: gp
 Permission: MANAGERANKS
 
 #### revokePerm
 Revokes a permission from a specific rank.
 Usage: /inc revokePerm &lt;company&gt; &lt;rank&gt; &lt;permission&gt;
-Aliases: rp revokeperm
+Alias: rp
 Permission: MANAGERANKS
+
+#### listPerms
+Lists a rank's permissions
+Usage: /inc listPerms &lt;company&gt; &lt;rank&gt;
+Alias: lp
 
 ## Employee Commands
 #### getRank
 Gets an employee's rank
 Usage: /inc getRank &lt;company&gt; &lt;employee&gt;
-Aliases: gr getrank
+Alias: gr
 Permission: MANAGEEMPLOYEES
 
 #### setRank
 Sets an employee's rank
 Usage: /inc setRank &lt;company&gt; &lt;employee&gt; &lt;rank&gt;
-Aliases: sr setRank
+Alias: sr
 Permission: MANAGEEMPLOYEES
 
 #### fire
@@ -87,10 +92,19 @@ Fires an employee
 Usage: /inc fire &lt;company&gt; &lt;employee&gt;
 Permission: FIRE
 
+#### resign
+Leave a company
+Usage: /inc resign &lt;company&gt; &lt;console: player&gt;
+
+#### employees
+List employees
+Usage: /inc employees &lt;company&gt;
+Alias: empl
+
 ## Applicant Commands
 #### apply
 Apply to a company
-Usage: /inc apply &lt;company&gt;
+Usage: /inc apply &lt;company&gt; &lt;console: player&gt;
 
 #### reject
 Reject an applicant
@@ -100,4 +114,10 @@ Permission: HIRE
 #### hire
 Hire an applicant
 Usage: /inc hire &lt;company&gt; &lt;applicant&gt;
+Permission: HIRE
+
+#### applicants
+List applicants
+Usage: /inc applicants &lt;company&gt;
+Alias: appl
 Permission: HIRE

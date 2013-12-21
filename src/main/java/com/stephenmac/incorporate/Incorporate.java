@@ -33,6 +33,7 @@ public final class Incorporate extends JavaPlugin {
         Morphia morphia = new Morphia();
         morphia.map(Company.class).map(Rank.class);
         companyDAO = new CompanyDAO(morphia, mongoClient);
+        companyDAO.ensureIndexes();
         
         // Setup Commands
         getCommand("inc").setExecutor(new UserCommandExecutor(this));

@@ -3,6 +3,8 @@ package com.stephenmac.incorporate;
 import java.util.List;
 //import java.util.logging.Logger;
 
+import java.util.Set;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,23 +23,23 @@ public class UserCommandExecutor implements CommandExecutor {
 			String action = args[0];
 			String result;
 
-			if (action.equals("list")){
+			if (action.equalsIgnoreCase("list")){
 				result = listCompanies();
 			}
-			else if (action.equals("create")){
+			else if (action.equalsIgnoreCase("create")){
 				if (args.length == 2 && sender instanceof Player){
 					result = createCompany(args[1], ((Player) sender).getName());
 				}
 				else if (args.length == 3 && !(sender instanceof Player)){
-					result = createCompany(args[2], args[1]);
+					result = createCompany(args[1], args[2]);
 				}
 				else{
-					result = usageMessage("create <company>");
+					result = usageMessage("create <company> <console: player>");
 				}
 			}
-			else if (action.equals("delete")){
+			else if (action.equalsIgnoreCase("delete")){
 				if (args.length == 2){
-					Company corp = companyDAO.get(args[1]);
+					Company corp = getByName(args[1]);
 					if (hasPerm(sender, corp, Permission.DELETE))
 						result = deleteCompany(corp);
 					else
@@ -48,7 +50,7 @@ public class UserCommandExecutor implements CommandExecutor {
 				}
 			}
 			else if (args.length > 1){
-				Company corp = companyDAO.get(args[1]);
+				Company corp = getByName(args[1]);
 				
 				if (corp != null){
 					switch (action.toLowerCase()){
@@ -64,11 +66,11 @@ public class UserCommandExecutor implements CommandExecutor {
 						}
 						break;
 						
-					case "lr": case "listranks": case "listRanks":
+					case "lr": case "listranks":
 						result = listRanks(corp);
 						break;
 
-					case "ar": case "addrank": case "addRank":
+					case "ar": case "addrank":
 						if (args.length == 4){
 							if (hasPerm(sender, corp, Permission.MANAGERANKS))
 								result = addRank(corp, args[2], args[3]);
@@ -80,7 +82,7 @@ public class UserCommandExecutor implements CommandExecutor {
 						}
 						break;
 					
-					case "rr": case "removerank": case "removeRank":
+					case "rr": case "removerank":
 						if (args.length == 3){
 							if (hasPerm(sender, corp, Permission.MANAGERANKS))
 								result = removeRank(corp, args[2]);
@@ -92,7 +94,7 @@ public class UserCommandExecutor implements CommandExecutor {
 						}
 						break;
 					
-					case "gw": case "getwage": case "getWage":
+					case "gw": case "getwage":
 						if (args.length == 3){
 							result = getWage(corp, args[2]);
 						}
@@ -101,7 +103,7 @@ public class UserCommandExecutor implements CommandExecutor {
 						}
 						break;
 
-					case "sw": case "setwage": case "setWage":
+					case "sw": case "setwage":
 						if (args.length == 4){
 							if (hasPerm(sender, corp, Permission.MANAGERANKS))
 								result = setWage(corp, args[2], args[3]);
@@ -113,11 +115,11 @@ public class UserCommandExecutor implements CommandExecutor {
 						}
 						break;
 					
-					case "getDRank": case "getdrank": case "gdr":
+					case "gdr": case "getdrank":
 						result = corp.getName() + "'s default rank is: " + corp.getDefault();
 						break;
 					
-					case "setDRank": case "setdrank": case "sdr":
+					case "sdr": case "setdrank":
 						if (args.length == 3){
 							if (hasPerm(sender, corp, Permission.MANAGERANKS)){
 								if(corp.setDefault(args[2]))
@@ -134,7 +136,7 @@ public class UserCommandExecutor implements CommandExecutor {
 						}
 						break;
 					
-					case "grantPerm": case "grantperm": case "gp":
+					case "gp": case "grantperm":
 						if (args.length == 4){
 							if (hasPerm(sender, corp, Permission.MANAGERANKS))
 								result = grantPerm(corp, args[2], args[3]);
@@ -146,7 +148,7 @@ public class UserCommandExecutor implements CommandExecutor {
 						}
 						break;
 					
-					case "revokePerm": case "revokeperm": case "rp":
+					case "rp": case "revokeperm":
 						if (args.length == 4){
 							if (hasPerm(sender, corp, Permission.MANAGERANKS))
 								result = revokePerm(corp, args[2], args[3]);
@@ -157,8 +159,17 @@ public class UserCommandExecutor implements CommandExecutor {
 							result = usageMessage("revokePerm <company> <rank> <perm>");
 						}
 						break;
+					
+					case "lp": case "listperms":
+						if(args.length == 3){
+							result = listPerms(corp, args[2]);
+						}
+						else{
+							result = usageMessage("listPerms <company> <rank>");
+						}
+						break;
 
-					case "gr": case "getrank": case "getRank":
+					case "gr": case "getrank":
 						if (args.length == 3){
 							result = getRank(corp, args[2]);
 						}
@@ -167,7 +178,7 @@ public class UserCommandExecutor implements CommandExecutor {
 						}
 						break;
 					
-					case "sr": case "setrank": case "setRank":
+					case "sr": case "setrank":
 						if (args.length == 4){
 							if (hasPerm(sender, corp, Permission.MANAGEEMPLOYEES))
 								result = setRank(corp, args[2], args[3]);
@@ -191,6 +202,24 @@ public class UserCommandExecutor implements CommandExecutor {
 						}
 						break;
 					
+					case "resign":
+						if (args.length == 2 && sender instanceof Player){
+							result = resign(corp, ((Player) sender).getName());
+						}
+						else{
+							if (args.length == 3){
+								result = resign(corp, args[2]);
+							}
+							else{
+								result = usageMessage("resign <company> <console: player>");
+							}
+						}
+						break;
+						
+					case "empl": case "employees":
+						result = listEmployees(corp);
+						break;
+					
 					case "apply":
 						if (sender instanceof Player){
 							result = apply(corp, ((Player) sender).getName());
@@ -200,7 +229,7 @@ public class UserCommandExecutor implements CommandExecutor {
 								result = apply(corp, args[2]);
 							}
 							else{
-								result = usageMessage("apply <company> <player>");
+								result = usageMessage("apply <company> <console: player>");
 							}
 						}
 						break;
@@ -227,6 +256,13 @@ public class UserCommandExecutor implements CommandExecutor {
 						else{
 							result = usageMessage("hire <company> <applicant>");
 						}
+						break;
+					
+					case "appl": case "applicants":
+						if (hasPerm(sender, corp, Permission.HIRE))
+							result = listApplicants(corp);
+						else
+							result = permMessage("HIRE");
 						break;
 		
 					default:
@@ -262,7 +298,7 @@ public class UserCommandExecutor implements CommandExecutor {
 	}
 
 	private String createCompany(String name, String player){
-		if (companyDAO.get(name) == null){
+		if (getByName(name) == null){
 			Company company = new Company();
 			company.setName(name);
 			company.addEmployee(player);
@@ -321,8 +357,7 @@ public class UserCommandExecutor implements CommandExecutor {
 		if (wage >= 0)
 			return String.format("The wage of a %s is %f", rank, wage);
 		else
-			return "No such rank";
-		
+			return "No such rank";		
 	}
 
 	private String setWage(Company company, String rank, String wage){
@@ -335,28 +370,45 @@ public class UserCommandExecutor implements CommandExecutor {
 	}
 	
 	private String grantPerm(Company company, String rank, String perm){
-		Permission p = Permission.valueOf(perm);
-		if (p == Permission.UNKNOWN){
+		Permission p;
+		try{
+			p = Permission.valueOf(perm.toUpperCase());
+		} catch (IllegalArgumentException e){
 			return "No such permission";
 		}
-		else{
-			if (company.grantPermission(rank, p))
-				return perm + " granted to " + rank + " in " + company.getName();
-			else
-				return "No such rank";
-		}
+
+		if (company.grantPermission(rank, p))
+			return perm + " granted to " + rank + " in " + company.getName();
+		else
+			return "No such rank or already granted";
 	}
 	
 	private String revokePerm(Company company, String rank, String perm){
-		Permission p = Permission.valueOf(perm);
-		if (p == Permission.UNKNOWN){
+		Permission p;
+		try{
+			p = Permission.valueOf(perm.toUpperCase());
+		} catch (IllegalArgumentException e){
 			return "No such permission";
 		}
+
+		if (company.revokePermission(rank, p))
+			return perm + " revoked from " + rank + " in " + company.getName();
+		else
+			return "No such rank";
+	}
+	
+	private String listPerms(Company company, String rank){
+		Rank r = company.getRank(rank);
+		if (r == null){
+			return "No such rank";
+		}
 		else{
-			if (company.revokePermission(rank, p))
-				return perm + " revoked from " + rank + " in " + company.getName();
-			else
-				return "No such rank";
+			StringBuilder s = new StringBuilder();
+			for (Permission p : r.permissions){
+				s.append(p.toString());
+			}
+			s.deleteCharAt(s.length()-1);
+			return s.toString();
 		}
 	}
 	
@@ -388,6 +440,24 @@ public class UserCommandExecutor implements CommandExecutor {
 			return employee + " not an employee of " + company.getName();
 	}
 	
+	private String resign(Company company, String employee){
+		if (company.fire(employee))
+			return employee + " has resigned from " + company.getName();
+		else
+			return employee + " not an employee of " + company.getName();
+	}
+	
+	private String listEmployees(Company company){
+		StringBuilder r = new StringBuilder();
+		Set<String> employees = company.getEmployeeSet();
+		
+		r.append("Employees (" + Integer.toString(employees.size()) + "):\n");
+		for (String s : employees){
+			r.append("* " + s + "\n");
+		}
+		return r.toString();
+	}
+	
 	private String apply(Company company, String applicant){
 		if (company.addApplicant(applicant))
 			return "You've applied to " + company.getName();
@@ -409,10 +479,21 @@ public class UserCommandExecutor implements CommandExecutor {
 			return employee + " is not an applicant";
 	}
 	
+	private String listApplicants(Company company){
+		StringBuilder r = new StringBuilder();
+		Set<String> applicants = company.getApplicantSet();
+		
+		r.append("Applicants (" + Integer.toString(applicants.size()) + "):\n");
+		for (String s : applicants){
+			r.append("* " + s + "\n");
+		}
+		return r.toString();
+	}
+	
 	// Helping functions
-	/*private Query<Company> getQuery(Company corp){
-		return companyDAO.createQuery().field(Mapper.ID_KEY).equal(corp.getName());
-	}*/
+	private Company getByName(String name){
+		return companyDAO.findOne("name", name);
+	}
 	
 	private boolean hasPerm(CommandSender sender, Company corp, Permission perm){
 		if (sender instanceof Player){

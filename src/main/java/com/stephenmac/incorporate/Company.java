@@ -7,12 +7,17 @@ import java.util.Map;
 import java.util.List;
 import java.util.Set;
 
+import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Indexed;
+import org.mongodb.morphia.utils.IndexDirection;
 
 @Entity
 public class Company {
-	@Id private String name;
+	@Id private ObjectId id;
+	@Indexed(value=IndexDirection.ASC, unique=true)
+	private String name;
 	private double balance = 0;
 	private String defaultRank = "Owner";
 	private List<Rank> ranks = new ArrayList<Rank>();
@@ -53,7 +58,7 @@ public class Company {
 	public boolean setDefault(String defaultRank) {
 		Rank r = getRank(defaultRank);
 		if (r != null){
-			this.defaultRank = defaultRank;
+			this.defaultRank = r.name;
 			return true;
 		}
 		return false;
@@ -144,6 +149,14 @@ public class Company {
 	public boolean isEmployee(String name){
 		return employees.containsKey(name);
 	}
+	
+	public void addEmployee(String employee){
+		employees.put(employee, defaultRank);
+	}
+	
+	public Set<String> getEmployeeSet(){
+		return employees.keySet();
+	}
 
 	public Rank getEmployeeRank(String name){
 		Rank r = getRank(employees.get(name));
@@ -173,6 +186,10 @@ public class Company {
 	}
 	
 	// Applicant Management
+	public Set<String> getApplicantSet(){
+		return applicants;
+	}
+	
 	public boolean addApplicant(String name){
 		if (!isEmployee(name)){
 			return applicants.add(name);
@@ -204,10 +221,5 @@ public class Company {
 
 	public List<Rank> getRanks(){
 		return ranks;
-	}
-	
-	// Utility
-	public void addEmployee(String employee){
-		employees.put(employee, defaultRank);
 	}
 }
