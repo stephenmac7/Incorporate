@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" exported="true"/>
+	<classpathentry sourcepath="/home/stephen/.gradle/caches/modules-2/files-2.1/org.mongodb.morphia/morphia/0.105/a8cdd5547d91ac368dd4d53eb008fe3c94fc638f/morphia-0.105-sources.jar" kind="lib" path="/home/stephen/.gradle/caches/modules-2/files-2.1/org.mongodb.morphia/morphia/0.105/69c28afc18acd162d4f1b37610b80217378a3bd7/morphia-0.105.jar" exported="true">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/home/stephen/.gradle/caches/modules-2/files-2.1/org.mongodb.morphia/morphia/0.105/906c4c7151ca9f715e7084f5dbeec971adba2e51/morphia-0.105-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="/home/stephen/.gradle/caches/modules-2/files-2.1/org.mongodb/mongo-java-driver/2.11.3/cad48bd302cbd58a9b3ddb46627483f49ce69716/mongo-java-driver-2.11.3-sources.jar" kind="lib" path="/home/stephen/.gradle/caches/modules-2/files-2.1/org.mongodb/mongo-java-driver/2.11.3/8a6dd3000edcc9eb18c51ebb01a42186411ccc08/mongo-java-driver-2.11.3.jar" exported="true">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/home/stephen/.gradle/caches/modules-2/files-2.1/org.mongodb/mongo-java-driver/2.11.3/3d0a8b874de86fe8c93f948b24a1264e52a08964/mongo-java-driver-2.11.3-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/stephen/.gradle/caches/modules-2/files-2.1/org.bukkit/bukkit/1.6.4-R2.0/5d9ca64eb20c079152c83fe847efb609200b10b4/bukkit-1.6.4-R2.0.jar" exported="true"/>
+	<classpathentry kind="lib" path="/home/stephen/Development/Eclipse/lib/Vault.jar" exported="true"/>
+</classpath>

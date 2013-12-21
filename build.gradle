@@ -1,0 +1,37 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+project.ext.HOME = "$System.env.HOME"
+project.ext.BUKKIT_HOME = project.HOME + "/Public/BukkitTest"
+
+jar {
+    manifest {
+        attributes 'Class-Path': '../lib/mongo.jar ../lib/morphia.jar'
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url "http://repo.bukkit.org/content/groups/public/"
+    }
+}
+
+dependencies {
+    compile 'org.mongodb.morphia:morphia:0.105'
+    compile 'org.mongodb:mongo-java-driver:2.11.3'
+    compile 'org.bukkit:bukkit:1.6.4-R2.0'
+    compile files('../lib/Vault.jar')
+}
+
+task copyToServer(dependsOn: 'jar', type: Copy) {
+    from 'build/libs/'
+    into project.BUKKIT_HOME + "/plugins/"
+}
+
+eclipse {
+    classpath {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}
