@@ -11,10 +11,6 @@ public class Rank {
 	public double wage = 0;
 	public Set<Permission> permissions = new TreeSet<Permission>();
 
-	public Rank(){
-		super();
-	}
-
 	public boolean addPermission(Permission permission){
 		return permissions.add(permission);
 	}

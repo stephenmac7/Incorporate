@@ -139,3 +139,28 @@ Get company balance
 Usage: /inc getBalance &lt;company&gt;
 Alias: gb
 Permission: GETBALANCE
+
+## Product Commands
+#### restock
+Add product(s) to company warehouse
+Usage: /inc restock &lt;company&gt; &lt;optional: quantity&gt;
+
+#### recall
+Remove product(s) from company warehouse
+Usage: /inc recall &lt;company&gt; &lt;itemNumber&gt; &lt;optional: quantity&gt;
+Permission: RECALL
+
+#### buyPrice
+Set price a product can be bought for
+Usage: /inc buyPrice &lt;company&gt; &lt;itemNumber&gt; &lt;price&gt;
+Permission: SETPRICE
+
+#### sellPrice
+Set price an item can be sold for
+Usage: /inc sellPrice &lt;company&gt; &lt;itemNumber&gt; &lt;price&gt;
+Permission: SETPRICE
+
+#### browse
+Browse company products
+Usage: /inc browse &lt;company&gt;
+Alias: br

@@ -20,7 +20,10 @@ public class Company {
 	private String name;
 	private double balance = 0;
 	private String defaultRank = "Owner";
+
 	private List<Rank> ranks = new ArrayList<Rank>();
+	private List<Product> products = new ArrayList<Product>();
+	
 	private Set<String> applicants = new HashSet<String>();
 	private Map<String, String> employees = new HashMap<String, String>();
 
@@ -212,9 +215,8 @@ public class Company {
 	// Rank informational operations
 	public Rank getRank(String name){
 		for (Rank r : ranks){
-			if (r.name.equalsIgnoreCase(name)){
+			if (r.name.equalsIgnoreCase(name))
 				return r;
-			}
 		}
 		return null;
 	}
@@ -226,5 +228,14 @@ public class Company {
 	// Money Management
 	public void adjustBalance(double amount){
 		balance += amount;
+	}
+	
+	// Product Management
+	public Product getProduct(int id){
+		for (Product p : products){
+			if (p.getId() == id)
+				return p;
+		}
+		return null;
 	}
 }
