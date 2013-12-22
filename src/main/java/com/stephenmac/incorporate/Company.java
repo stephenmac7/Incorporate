@@ -222,4 +222,9 @@ public class Company {
 	public List<Rank> getRanks(){
 		return ranks;
 	}
+	
+	// Money Management
+	public void adjustBalance(double amount){
+		balance += amount;
+	}
 }

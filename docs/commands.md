@@ -126,12 +126,13 @@ Permission: HIRE
 #### deposit
 Deposit money
 Usage: /inc deposit &lt;company&gt; &lt;console: player&gt; &lt;amount&gt;
+Alias: dp
 
-#### withdrawal
-Withdrawal money
-Usage: /inc withdrawal &lt;company&gt; &lt;console: player&gt; &lt;amount&gt;
+#### withdraw
+Withdraw money
+Usage: /inc withdraw &lt;company&gt; &lt;console: player&gt; &lt;amount&gt;
 Alias: wd
-Permission: WITHDRAWAL
+Permission: WITHDRAW
 
 #### getBalance
 Get company balance

@@ -11,7 +11,7 @@ import org.mongodb.morphia.Morphia;
 import com.mongodb.MongoClient;
 
 public final class Incorporate extends JavaPlugin {
-	public static Economy econ = null;
+	public Economy econ = null;
 	public CompanyDAO companyDAO;
 
 	@Override

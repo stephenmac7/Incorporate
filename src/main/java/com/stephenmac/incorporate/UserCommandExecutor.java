@@ -5,6 +5,9 @@ import java.util.List;
 
 import java.util.Set;
 
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.economy.EconomyResponse;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,9 +15,11 @@ import org.bukkit.entity.Player;
 
 public class UserCommandExecutor implements CommandExecutor {
 	private CompanyDAO companyDAO;
+	public static Economy econ;
 	 
 	public UserCommandExecutor(Incorporate plugin) {
 		companyDAO = plugin.companyDAO;
+		econ = plugin.econ;
 	}
 
 	@Override
@@ -264,6 +269,34 @@ public class UserCommandExecutor implements CommandExecutor {
 						else
 							result = permMessage("HIRE");
 						break;
+					
+					case "dp": case "deposit":
+						if (sender instanceof Player && args.length == 3)
+							result = deposit(corp, ((Player) sender).getName(), args[2]);
+						else if (!(sender instanceof Player) && args.length == 4)
+							result = deposit(corp, args[2], args[3]);
+						else
+							result = usageMessage("deposit <company> <console: player> <amount>");
+					
+					case "wd": case "withdraw":
+						if (sender instanceof Player && args.length == 3){
+							if (hasPerm(sender, corp, Permission.WITHDRAW))
+								result = withdraw(corp, ((Player) sender).getName(), args[2]);
+							else
+								result = permMessage("WITHDRAW");
+						}
+						else if (!(sender instanceof Player) && args.length == 4){
+							result = withdraw(corp, args[2], args[3]);
+						}
+						else{
+							result = usageMessage("withdraw <company> <console: player> <amount>");
+						}
+						
+					case "db": case "getbalance":
+						if (hasPerm(sender, corp, Permission.GETBALANCE))
+							result = getBalance(corp);
+						else
+							result = permMessage("GETBALANCE");
 		
 					default:
 						result = "Action does not exist";
@@ -488,6 +521,34 @@ public class UserCommandExecutor implements CommandExecutor {
 			r.append("* " + s + "\n");
 		}
 		return r.toString();
+	}
+	
+	private String deposit(Company company, String player, String amount){
+		double pAmount = Double.parseDouble(amount);
+		EconomyResponse r = econ.withdrawPlayer(player, pAmount);
+		if (r.transactionSuccess()){
+			company.adjustBalance(pAmount);
+			return "Successfully deposited " + amount + " into " + company.getName();
+		}
+		else{
+			return r.errorMessage;
+		}
+	}
+	
+	private String withdraw(Company company, String player, String amount){
+		double pAmount = Double.parseDouble(amount);
+		EconomyResponse r = econ.depositPlayer(player, pAmount);
+		if (r.transactionSuccess()){
+			company.adjustBalance(-pAmount);
+			return "Successfully withdrew " + amount + " from " + company.getName();
+		}
+		else{
+			return r.errorMessage;
+		}
+	}
+	
+	private String getBalance(Company company){
+		return company.getName() + "'s balance is: " + company.getBalance();
 	}
 	
 	// Helping functions
