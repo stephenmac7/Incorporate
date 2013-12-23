@@ -26,9 +26,6 @@ public class UserCommandExecutor implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		System.out.println(sender.getName());
-		System.out.println(args.length);
-		System.out.println(cmd);
 		if(args.length > 0){
 			String action = args[0];
 			String result;
