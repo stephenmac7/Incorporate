@@ -4,33 +4,44 @@ import org.mongodb.morphia.annotations.Embedded;
 
 @Embedded
 public class Product {
-	private int id;
-	private double buyPrice;
-	private double sellPrice;
-	private int quantity;
+	private Item item;
+	private Double buyPrice = null;
+	private Double sellPrice = null;
+	private int quantity = 0;
 
-	public int getId() {
-		return id;
+	public Item getItem() {
+		return item;
 	}
-	public void setId(int id) {
-		this.id = id;
+
+	public void setItem(Item item) {
+		this.item = item;
 	}
-	public double getBuyPrice() {
+
+	public Double getBuyPrice() {
 		return buyPrice;
 	}
-	public void setBuyPrice(double buyPrice) {
+
+	public void setBuyPrice(Double buyPrice) {
 		this.buyPrice = buyPrice;
 	}
-	public double getSellPrice() {
+
+	public Double getSellPrice() {
 		return sellPrice;
 	}
-	public void setSellPrice(double sellPrice) {
+
+	public void setSellPrice(Double sellPrice) {
 		this.sellPrice = sellPrice;
 	}
+
 	public int getQuantity() {
 		return quantity;
 	}
+
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
+	}
+
+	public void adjustQuantity(int delta) {
+		this.quantity += delta;
 	}
 }

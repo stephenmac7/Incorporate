@@ -3,6 +3,7 @@ apply plugin: 'eclipse'
 
 project.ext.HOME = "$System.env.HOME"
 project.ext.BUKKIT_HOME = project.HOME + "/Public/BukkitTest"
+project.ext.SERVER_HOME = project.HOME + "/Public/Server"
 
 jar {
     manifest {
@@ -25,6 +26,11 @@ dependencies {
 }
 
 task copyToServer(dependsOn: 'jar', type: Copy) {
+    from 'build/libs/'
+    into project.SERVER_HOME + "/plugins/"
+}
+
+task copyToTest(dependsOn: 'jar', type: Copy) {
     from 'build/libs/'
     into project.BUKKIT_HOME + "/plugins/"
 }

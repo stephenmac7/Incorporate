@@ -231,11 +231,18 @@ public class Company {
 	}
 	
 	// Product Management
-	public Product getProduct(int id){
+	public Product getProduct(Item item){
 		for (Product p : products){
-			if (p.getId() == id)
+			if (p.getItem().equals(item))
 				return p;
 		}
-		return null;
+		Product newProduct = new Product();
+		newProduct.setItem(item);
+		products.add(newProduct);
+		return newProduct;
+	}
+	
+	public List<Product> getProducts(){
+		return products;
 	}
 }

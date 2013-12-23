@@ -134,31 +134,34 @@ Usage: /inc withdraw &lt;company&gt; &lt;console: player&gt; &lt;amount&gt;
 Alias: wd
 Permission: WITHDRAW
 
-#### getBalance
+#### balance
 Get company balance
-Usage: /inc getBalance &lt;company&gt;
-Alias: gb
+Usage: /inc balance &lt;company&gt;
+Alias: b
 Permission: GETBALANCE
 
 ## Product Commands
 #### restock
 Add product(s) to company warehouse
-Usage: /inc restock &lt;company&gt; &lt;optional: quantity&gt;
+Usage: /inc restock &lt;company&gt;
 
 #### recall
 Remove product(s) from company warehouse
-Usage: /inc recall &lt;company&gt; &lt;itemNumber&gt; &lt;optional: quantity&gt;
+Usage: /inc recall &lt;company&gt; &lt;itemNumber&gt; &lt;quantity&gt;
 Permission: RECALL
 
-#### buyPrice
-Set price a product can be bought for
-Usage: /inc buyPrice &lt;company&gt; &lt;itemNumber&gt; &lt;price&gt;
+#### price
+Set price a product can be bought/sold for
+Usage: /inc price &lt;company&gt; &lt;itemNumber&gt; &lt;buy/sell&gt; &lt;price&gt;
 Permission: SETPRICE
 
-#### sellPrice
-Set price an item can be sold for
-Usage: /inc sellPrice &lt;company&gt; &lt;itemNumber&gt; &lt;price&gt;
-Permission: SETPRICE
+#### buy
+Buys an item
+Usage: /inc buy &lt;company&gt; &lt;itemNumber&gt; &lt;quantity&gt;
+
+#### sell
+Sells an item
+Usage: /inc sell &lt;company&gt;
 
 #### browse
 Browse company products

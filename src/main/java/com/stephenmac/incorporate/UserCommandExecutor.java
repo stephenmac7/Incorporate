@@ -12,6 +12,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 public class UserCommandExecutor implements CommandExecutor {
 	private CompanyDAO companyDAO;
@@ -24,6 +26,9 @@ public class UserCommandExecutor implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		System.out.println(sender.getName());
+		System.out.println(args.length);
+		System.out.println(cmd);
 		if(args.length > 0){
 			String action = args[0];
 			String result;
@@ -56,6 +61,7 @@ public class UserCommandExecutor implements CommandExecutor {
 			}
 			else if (args.length > 1){
 				Company corp = getByName(args[1]);
+				String nConsole = "Must be a player to use this command";
 				
 				if (corp != null){
 					switch (action.toLowerCase()){
@@ -277,6 +283,7 @@ public class UserCommandExecutor implements CommandExecutor {
 							result = deposit(corp, args[2], args[3]);
 						else
 							result = usageMessage("deposit <company> <console: player> <amount>");
+						break;
 					
 					case "wd": case "withdraw":
 						if (sender instanceof Player && args.length == 3){
@@ -291,12 +298,73 @@ public class UserCommandExecutor implements CommandExecutor {
 						else{
 							result = usageMessage("withdraw <company> <console: player> <amount>");
 						}
+						break;
 						
-					case "db": case "getbalance":
+					case "b": case "balance":
 						if (hasPerm(sender, corp, Permission.GETBALANCE))
-							result = getBalance(corp);
+							result = balance(corp);
 						else
 							result = permMessage("GETBALANCE");
+						break;
+					
+					case "restock":
+						if (sender instanceof Player)
+							result = restock(corp, (Player) sender);
+						else
+							result = nConsole;
+						break;
+					
+					case "recall":
+						if (args.length == 4){
+							if (sender instanceof Player){
+								if (hasPerm(sender, corp, Permission.RECALL))
+									result = recall(corp, (Player) sender, args[2], args[3]);
+								else
+									result = permMessage("RECALL");
+							}
+							else{
+								result = nConsole;
+							}
+						}
+						else{
+							result = usageMessage("recall <company> <itemNumber> <quantity>");
+						}
+						break;
+					
+					case "price":
+						if (args.length == 5){
+							if (hasPerm(sender, corp, Permission.SETPRICE))
+								result = price(corp, args[2], args[3], args[4]);
+							else
+								result = permMessage("SETPRICE");
+						}
+						else{
+							result = usageMessage("price <company> <itemNumber> <buy/sell> <price>");
+						}
+						break;
+					
+					case "buy":
+						if (args.length == 4){
+							if (sender instanceof Player)
+								result = buy(corp, (Player) sender, args[2], args[3]);
+							else
+								result = nConsole;
+						}
+						else{
+							result = usageMessage("buy <company> <itemNumber> <quantity>");
+						}
+						break;
+						
+					case "sell":
+						if (sender instanceof Player)
+							result = sell(corp, (Player) sender);
+						else
+							result = nConsole;
+						break;
+					
+					case "browse":
+						result = browse(corp);
+						break;
 		
 					default:
 						result = "Action does not exist";
@@ -318,7 +386,6 @@ public class UserCommandExecutor implements CommandExecutor {
 		return false;
 	}
 
-	// Company General (Create, Delete, Change Name, List_)
 	private String listCompanies(){
 		StringBuilder r = new StringBuilder();
 		List<Company> companyList = companyDAO.find().asList();
@@ -354,7 +421,6 @@ public class UserCommandExecutor implements CommandExecutor {
 		return "Successfully renamed to " + company.getName();
 	}
 	
-	// Company Ranks
 	private String listRanks(Company company){
 		StringBuilder s = new StringBuilder();
 		s.append("Ranks (" + Integer.toString(company.getRanks().size()) + "):\n");
@@ -438,7 +504,7 @@ public class UserCommandExecutor implements CommandExecutor {
 		else{
 			StringBuilder s = new StringBuilder();
 			for (Permission p : r.permissions){
-				s.append(p.toString());
+				s.append(p.toString() + " ");
 			}
 			s.deleteCharAt(s.length()-1);
 			return s.toString();
@@ -525,33 +591,213 @@ public class UserCommandExecutor implements CommandExecutor {
 	
 	private String deposit(Company company, String player, String amount){
 		double pAmount = Double.parseDouble(amount);
-		EconomyResponse r = econ.withdrawPlayer(player, pAmount);
-		if (r.transactionSuccess()){
-			company.adjustBalance(pAmount);
-			return "Successfully deposited " + amount + " into " + company.getName();
+		if (pAmount > 0){
+			EconomyResponse r = econ.withdrawPlayer(player, pAmount);
+			if (r.transactionSuccess()){
+				company.adjustBalance(pAmount);
+				return "Successfully deposited " + amount + " into " + company.getName();
+			}
+			else{
+				return r.errorMessage;
+			}
 		}
 		else{
-			return r.errorMessage;
+			return "Cannot deposit that amount of money";
 		}
 	}
 	
 	private String withdraw(Company company, String player, String amount){
 		double pAmount = Double.parseDouble(amount);
-		EconomyResponse r = econ.depositPlayer(player, pAmount);
-		if (r.transactionSuccess()){
-			company.adjustBalance(-pAmount);
-			return "Successfully withdrew " + amount + " from " + company.getName();
+		if (pAmount > 0 && company.getBalance() >= pAmount){
+			EconomyResponse r = econ.depositPlayer(player, pAmount);
+			if (r.transactionSuccess()){
+				company.adjustBalance(-pAmount);
+				return "Successfully withdrew " + amount + " from " + company.getName();
+			}
+			else{
+				return r.errorMessage;
+			}
 		}
 		else{
-			return r.errorMessage;
+			return "Cannot withdraw that amount of money";
 		}
 	}
 	
-	private String getBalance(Company company){
+	private String balance(Company company){
 		return company.getName() + "'s balance is: " + company.getBalance();
 	}
 	
+	@SuppressWarnings("deprecation")
+	private String restock(Company company, Player player){
+		// Get item stack
+		PlayerInventory pinv = player.getInventory();
+		ItemStack cur_stack = pinv.getItemInHand();
+		
+		// Get information
+		int quan = cur_stack.getAmount();
+		if (quan > 0){
+			Item item = new Item();
+			item.setData(cur_stack.getData().getData());
+			item.setId(cur_stack.getTypeId());
+			
+			// Delete it from player
+			pinv.clear(pinv.getHeldItemSlot());
+			
+			// Add it to the company
+			Product p = company.getProduct(item);
+			p.adjustQuantity(quan);
+			
+			// Tell the player things worked
+			return String.format("%d items of type %d:%d added to stock", quan, item.getId(), item.getData());
+		}
+		return "Nothing in hand";
+	}
+	
+	private String recall(Company company, Player player, String item, String quantity){
+		int quan = Integer.parseInt(quantity);
+		if (quan > 0){
+			// Get product
+			Item parsed = parseItem(item);
+			Product p = company.getProduct(parsed);
+			
+			if (p.getQuantity() < quan){
+				return "Not enough items to recall";
+			}
+			else{
+				p.adjustQuantity(-quan);
+				givePlayer(player, parsed, quan);
+				return "Successfully recalled " + quantity + " items";
+			}
+		}
+		else{
+			return "Cannot recall negative number of items";
+		}
+	}
+	
+	private String price(Company company, String item, String buySell, String price){
+		Double pPrice = price == "null" ? null : Double.parseDouble(price);
+		if (pPrice > 0){
+			Item parsed = parseItem(item);
+			Product p = company.getProduct(parsed);
+			
+			switch(buySell.toLowerCase()){
+			case "buy":
+				p.setBuyPrice(pPrice);
+				break;
+			case "sell":
+				p.setSellPrice(pPrice);
+				break;
+			default:
+				return "You did not specity buy or sell";
+			}
+			return "Price of " + item + " set to " + price;
+		}
+		else{
+			return "Cannot have negative price or no charge";
+		}
+	}
+	
+	private String buy(Company company, Player player, String item, String quantity){
+		int quan = Integer.parseInt(quantity);
+		if (quan > 0){
+			Item parsed = parseItem(item);
+			Product p = company.getProduct(parsed);
+			
+			if (p.getBuyPrice() != null){
+				if (p.getQuantity() < quan){
+					return "Not enough items in stock";
+				}
+				else{
+					EconomyResponse r = econ.withdrawPlayer(player.getName(), p.getBuyPrice() * quan);
+					if (r.transactionSuccess()){
+						p.adjustQuantity(-quan);
+						givePlayer(player, parsed, quan);
+						return "Successfully bought " + quantity + " of " + item + " from " + company.getName();
+					}
+					else{
+						return r.errorMessage;
+					}
+				}
+			}
+			else{
+				return "Item not for sale";
+			}
+		}
+		else{
+			return "Cannot buy less than 1 item";
+		}
+	}
+	
+	@SuppressWarnings("deprecation")
+	private String sell(Company company, Player player){
+		// Get item stack
+		PlayerInventory pinv = player.getInventory();
+		ItemStack cur_stack = pinv.getItemInHand();
+		
+		// Get information
+		int quan = cur_stack.getAmount();
+		if (quan > 0){
+			Item item = new Item();
+			item.setData(cur_stack.getData().getData());
+			item.setId(cur_stack.getTypeId());
+			Product p = company.getProduct(item);
+			
+			if (p.getSellPrice() != null){
+				// Award money
+				EconomyResponse r = econ.depositPlayer(player.getName(), p.getSellPrice() * quan);
+				
+				if (r.transactionSuccess()){
+					// Delete it from player
+					pinv.clear(pinv.getHeldItemSlot());
+					
+					// Add it to the company
+					p.adjustQuantity(quan);
+					
+					// Take company's money
+					company.adjustBalance(p.getSellPrice() * -quan);
+					
+					// Tell the player things worked
+					return String.format("%d items of type %d:%d sold", quan, item.getId(), item.getData());
+				}
+				else{
+					return r.errorMessage;
+				}
+			}
+			else{
+				return "Item not sellable";
+			}
+		}
+		return "Nothing in hand";
+	}
+	
+	private String browse(Company company){
+		StringBuilder s = new StringBuilder();
+		for (Product p : company.getProducts()){
+			if (p.getBuyPrice() != null || p.getSellPrice() != null)
+				s.append(String.format("%d:%d (%f, %f)\n", p.getItem().getId(), p.getItem().getData(), p.getBuyPrice(), p.getSellPrice()));
+		}
+		return s.toString();
+	}
+	
 	// Helping functions
+	private Item parseItem(String item){
+		Item i = new Item();
+		if (item.contains(":")){
+			String[] itemArgs = item.split(":");
+			i.setId(Integer.parseInt(itemArgs[0]));
+			i.setData(Byte.parseByte(itemArgs[1]));
+		}
+		else{
+			i.setId(Integer.parseInt(item));
+		}
+		return i;
+	}
+	
+	@SuppressWarnings("deprecation")
+	private void givePlayer(Player player, Item item, int quantity){
+		player.getInventory().addItem(new ItemStack(item.getId(), quantity, (short) 0, item.getData()));
+	}
+	
 	private Company getByName(String name){
 		return companyDAO.findOne("name", name);
 	}
