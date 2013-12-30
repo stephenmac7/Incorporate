@@ -38,7 +38,7 @@ public final class Incorporate extends JavaPlugin {
         morphia.map(Company.class).map(Rank.class);
         // Setup datastore
 		MapperOptions opts = new MapperOptions();
-		opts.objectFactory = new CustomCreator();
+		opts.objectFactory = new CustomCreator(this.getClassLoader());
 		Mapper mapper = new Mapper(opts);
 		Datastore ds = new DatastoreImpl(mapper, mongoClient, "incorporate");
 		// Setup DAO

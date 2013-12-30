@@ -44,4 +44,9 @@ public class Product {
 	public void adjustQuantity(int delta) {
 		this.quantity += delta;
 	}
+	
+	@Override
+	public String toString(){
+		return String.format("%s (%f, %f)", this.item, this.buyPrice, this.sellPrice);
+	}
 }

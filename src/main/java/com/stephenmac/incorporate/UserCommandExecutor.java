@@ -1,8 +1,8 @@
 package com.stephenmac.incorporate;
 
+import java.util.HashSet;
 import java.util.List;
-//import java.util.logging.Logger;
-
+import java.util.Map;
 import java.util.Set;
 
 import net.milkbowl.vault.economy.Economy;
@@ -54,6 +54,17 @@ public class UserCommandExecutor implements CommandExecutor {
 				}
 				else{
 					result = usageMessage("delete <company>");
+				}
+			}
+			else if (action.equalsIgnoreCase("clean")){
+				if (sender instanceof Player){
+					result = "Sorry, players cannot execute this command";
+				}
+				else{
+					if (args.length == 2)
+						result = cleanDb(args[1] == "y" ? true : false);
+					else
+						result = cleanDb(false);
 				}
 			}
 			else if (args.length > 1){
@@ -228,6 +239,14 @@ public class UserCommandExecutor implements CommandExecutor {
 						result = listEmployees(corp);
 						break;
 					
+					case "pe": case "payEmployees":
+						Permission[] perms = {Permission.WITHDRAW, Permission.MANAGEEMPLOYEES};
+						if (hasPerm(sender, corp, perms))
+							result = payEmployees(corp);
+						else
+							result = permMessage("WITHDRAW and MANAGEEMPLOYEES");
+						break;
+					
 					case "apply":
 						if (sender instanceof Player){
 							result = apply(corp, ((Player) sender).getName());
@@ -362,6 +381,15 @@ public class UserCommandExecutor implements CommandExecutor {
 					case "browse":
 						result = browse(corp);
 						break;
+					
+					case "pi": case "productInfo":
+						if (args.length == 3){
+							result = productInfo(corp, args[2]);
+						}
+						else{
+							result = usageMessage("productInfo <company> <itemNumber>");
+						}
+						break;
 		
 					default:
 						result = "Action does not exist";
@@ -381,6 +409,41 @@ public class UserCommandExecutor implements CommandExecutor {
 			return true;
 		}
 		return false;
+	}
+
+	private String cleanDb(boolean aggressive) {
+		List<Company> companyList = companyDAO.find().asList();
+		for (Company c : companyList){
+			// Make sure we still have employees
+			if (c.getEmployeeSet().size() == 0){
+				companyDAO.delete(c);
+			}
+			else{
+				// Ranks need to be cleaned up, if no employees are of a rank, delete it
+				Set<String> ranks = new HashSet<String>();
+				for (String rank : c.getEmployeeValues()){
+					ranks.add(rank);
+				}
+				for (Rank r : c.getRanks()){
+					if (!ranks.contains(r.name)){
+						c.removeRank(r.name);
+					}
+				}
+				// Clean up products
+				for (Product p : c.getProducts()){
+					if (p.getQuantity() == 0){
+						if (aggressive){
+							c.removeProduct(p);
+						}
+						else if(p.getBuyPrice() == null && p.getSellPrice() == null){
+							c.removeProduct(p);
+						}
+					}
+				}
+				companyDAO.save(c);
+			}
+		}
+		return "Your DB should be clean now.";
 	}
 
 	private String listCompanies(){
@@ -554,6 +617,34 @@ public class UserCommandExecutor implements CommandExecutor {
 		return r.toString();
 	}
 	
+	private String payEmployees(Company company){
+		// Get employees
+		Map<String, Rank> employees = company.getEmployees();
+
+		// Make sure we have enough money
+		double amount = 0;
+		for (Rank r : employees.values()){
+			amount += r.wage;
+		}
+		if (amount > company.getBalance())
+			return "Not enough money to pay all employees. Please get more money or cut your employees' paychecks.";
+		
+		// Pay them
+		StringBuilder s = new StringBuilder();
+		for (Map.Entry<String, Rank> employee : employees.entrySet()){
+			double wage = employee.getValue().wage;
+			EconomyResponse r = econ.depositPlayer(employee.getKey(), wage);
+			if (r.transactionSuccess()){
+				company.adjustBalance(-wage);
+			}
+			else{
+				s.append("Unable to pay " + employee + ": " + r.errorMessage + "\n");
+			}
+		}
+		s.append("Employees paid");
+		return s.toString();
+	}
+	
 	private String apply(Company company, String applicant){
 		if (company.addApplicant(applicant))
 			return "You've applied to " + company.getName();
@@ -641,7 +732,7 @@ public class UserCommandExecutor implements CommandExecutor {
 			pinv.clear(pinv.getHeldItemSlot());
 			
 			// Add it to the company
-			Product p = company.getProduct(item);
+			Product p = company.getProduct(item, true);
 			p.adjustQuantity(quan);
 			
 			// Tell the player things worked
@@ -657,7 +748,7 @@ public class UserCommandExecutor implements CommandExecutor {
 			Item parsed = parseItem(item);
 			Product p = company.getProduct(parsed);
 			
-			if (p.getQuantity() < quan){
+			if (p == null || p.getQuantity() < quan){
 				return "Not enough items to recall";
 			}
 			else{
@@ -675,7 +766,7 @@ public class UserCommandExecutor implements CommandExecutor {
 		Double pPrice = price == "null" ? null : Double.parseDouble(price);
 		if (pPrice > 0){
 			Item parsed = parseItem(item);
-			Product p = company.getProduct(parsed);
+			Product p = company.getProduct(parsed, true);
 			
 			switch(buySell.toLowerCase()){
 			case "buy":
@@ -687,7 +778,13 @@ public class UserCommandExecutor implements CommandExecutor {
 			default:
 				return "You did not specity buy or sell";
 			}
-			return "Price of " + item + " set to " + price;
+			if (p.getBuyPrice() == null && p.getSellPrice() == null && p.getQuantity() == 0){
+				company.removeProduct(p);
+				return item + " removed from " + company.getName() + "'s books.";
+			}
+			else{
+				return "Price of " + item + " set to " + price;
+			}
 		}
 		else{
 			return "Cannot have negative price or no charge";
@@ -698,9 +795,9 @@ public class UserCommandExecutor implements CommandExecutor {
 		int quan = Integer.parseInt(quantity);
 		if (quan > 0){
 			Item parsed = parseItem(item);
-			Product p = company.getProduct(parsed);
+			Product p = company.getProduct(parsed, false);
 			
-			if (p.getBuyPrice() != null){
+			if (p != null && p.getBuyPrice() != null){
 				if (p.getQuantity() < quan){
 					return "Not enough items in stock";
 				}
@@ -739,7 +836,7 @@ public class UserCommandExecutor implements CommandExecutor {
 			item.setId(cur_stack.getTypeId());
 			Product p = company.getProduct(item);
 			
-			if (p.getSellPrice() != null){
+			if (p != null && p.getSellPrice() != null){
 				// Award money
 				EconomyResponse r = econ.depositPlayer(player.getName(), p.getSellPrice() * quan);
 				
@@ -771,9 +868,20 @@ public class UserCommandExecutor implements CommandExecutor {
 		StringBuilder s = new StringBuilder();
 		for (Product p : company.getProducts()){
 			if (p.getBuyPrice() != null || p.getSellPrice() != null)
-				s.append(String.format("%d:%d (%f, %f)\n", p.getItem().getId(), p.getItem().getData(), p.getBuyPrice(), p.getSellPrice()));
+				s.append(String.format("%s\n", p));
 		}
 		return s.toString();
+	}
+	
+	private String productInfo(Company company, String item){
+		Item parsed = parseItem(item);
+		Product p = company.getProduct(parsed);
+		if (p != null){
+			return p.toString();
+		}
+		else{
+			return "Company does not offer " + item;
+		}
 	}
 	
 	// Helping functions
@@ -799,19 +907,27 @@ public class UserCommandExecutor implements CommandExecutor {
 		return companyDAO.findOne("name", name);
 	}
 	
-	private boolean hasPerm(CommandSender sender, Company corp, Permission perm){
+	private boolean hasPerm(CommandSender sender, Company corp, Permission[] perms){
 		if (sender instanceof Player){
 			Player player = (Player) sender;
-			if (player.hasPermission("inc.admin") || corp.hasPerm(player.getName(), perm)){
-				return true;
-			}
-			else{
-				return false;
-			}
+			return player.hasPermission("inc.admin") || allPerms(player.getName(), corp, perms);
 		}
 		else{
 			return true;
 		}
+	}
+	
+	private boolean hasPerm(CommandSender sender, Company corp, Permission perm){
+		Permission[] a = {perm};
+		return hasPerm(sender, corp, a);
+	}
+	
+	private boolean allPerms(String player, Company corp, Permission[] perms){
+		for (Permission perm : perms){
+			if (!corp.hasPerm(player, perm))
+				return false;
+		}
+		return true;
 	}
 	
 	private String permMessage(String perm){

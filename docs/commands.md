@@ -101,6 +101,12 @@ List employees
 Usage: /inc employees &lt;company&gt;
 Alias: empl
 
+#### payEmployees
+Pay all the employees currently employed at the company
+Usage: /inc payEmployees &lt;company&gt;
+Alias: pe
+Permission: WITHDRAW, MANAGEEMPLOYEES
+
 ## Applicant Commands
 #### apply
 Apply to a company
@@ -167,3 +173,14 @@ Usage: /inc sell &lt;company&gt;
 Browse company products
 Usage: /inc browse &lt;company&gt;
 Alias: br
+
+#### productInfo
+Displays information about the product, including the item number and the price
+Usage: /inc productInfo &lt;company&gt; &lt;itemNumber&gt;
+Alias: pi
+
+## Console Commands
+#### clean
+Cleans up the database
+Usage: /inc clean [y]
+Note: Adding a 'y' argument makes the cleanup more aggressive.

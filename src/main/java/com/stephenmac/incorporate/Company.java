@@ -1,6 +1,7 @@
 package com.stephenmac.incorporate;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -160,6 +161,18 @@ public class Company {
 	public Set<String> getEmployeeSet(){
 		return employees.keySet();
 	}
+	
+	public Collection<String> getEmployeeValues(){
+		return employees.values();
+	}
+	
+	public Map<String, Rank> getEmployees(){
+		Map<String, Rank> r = new HashMap<String, Rank>();
+		for (String employee : employees.keySet()){
+			r.put(employee, getEmployeeRank(employee));
+		}
+		return r;
+	}
 
 	public Rank getEmployeeRank(String name){
 		Rank r = getRank(employees.get(name));
@@ -232,14 +245,27 @@ public class Company {
 	
 	// Product Management
 	public Product getProduct(Item item){
+		return getProduct(item, false);
+	}
+	
+	public Product getProduct(Item item, boolean makeProduct){
 		for (Product p : products){
 			if (p.getItem().equals(item))
 				return p;
 		}
-		Product newProduct = new Product();
-		newProduct.setItem(item);
-		products.add(newProduct);
-		return newProduct;
+		if (makeProduct){
+			Product newProduct = new Product();
+			newProduct.setItem(item);
+			products.add(newProduct);
+			return newProduct;
+		}
+		else{
+			return null;
+		}
+	}
+	
+	public boolean removeProduct(Product p){
+		return products.remove(p);
 	}
 	
 	public List<Product> getProducts(){
