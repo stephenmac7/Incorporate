@@ -86,6 +86,7 @@ public class Company {
 				Rank newRank = new Rank();
 				newRank.name = name;
 				newRank.wage = wage;
+				newRank.permissions.add(Permission.BASIC);
 				this.ranks.add(newRank);
 				return true;
 			}

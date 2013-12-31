@@ -1,7 +1,7 @@
 package com.stephenmac.incorporate;
 
 public enum Permission {
-	HIRE, FIRE,
+	HIRE, FIRE, BASIC,
 	DELETE, RENAME,
 	MANAGERANKS, MANAGEEMPLOYEES,
 	WITHDRAW, RECALL,

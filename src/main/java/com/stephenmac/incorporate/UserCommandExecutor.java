@@ -802,11 +802,13 @@ public class UserCommandExecutor implements CommandExecutor {
 					return "Not enough items in stock";
 				}
 				else{
-					EconomyResponse r = econ.withdrawPlayer(player.getName(), p.getBuyPrice() * quan);
+					double totalPrice = p.getBuyPrice() * quan;
+					EconomyResponse r = econ.withdrawPlayer(player.getName(), totalPrice);
 					if (r.transactionSuccess()){
 						p.adjustQuantity(-quan);
+						company.adjustBalance(totalPrice);
 						givePlayer(player, parsed, quan);
-						return "Successfully bought " + quantity + " of " + item + " from " + company.getName();
+						return String.format("Bought %d of %s from %s for %f", quantity, item, company.getName(), totalPrice);
 					}
 					else{
 						return r.errorMessage;
@@ -837,24 +839,30 @@ public class UserCommandExecutor implements CommandExecutor {
 			Product p = company.getProduct(item);
 			
 			if (p != null && p.getSellPrice() != null){
-				// Award money
-				EconomyResponse r = econ.depositPlayer(player.getName(), p.getSellPrice() * quan);
-				
-				if (r.transactionSuccess()){
-					// Delete it from player
-					pinv.clear(pinv.getHeldItemSlot());
-					
-					// Add it to the company
-					p.adjustQuantity(quan);
-					
-					// Take company's money
-					company.adjustBalance(p.getSellPrice() * -quan);
-					
-					// Tell the player things worked
-					return String.format("%d items of type %d:%d sold", quan, item.getId(), item.getData());
+				double totalPrice = p.getSellPrice() * quan;
+				if (totalPrice > company.getBalance()){
+					return "Company does not have enough money to pay you!";
 				}
 				else{
-					return r.errorMessage;
+					// Award money
+					EconomyResponse r = econ.depositPlayer(player.getName(), totalPrice);
+					
+					if (r.transactionSuccess()){
+						// Delete it from player
+						pinv.clear(pinv.getHeldItemSlot());
+						
+						// Add it to the company
+						p.adjustQuantity(quan);
+						
+						// Take company's money
+						company.adjustBalance(-totalPrice);
+						
+						// Tell the player things worked
+						return String.format("%d items of type %d:%d sold for %f", quan, item.getId(), item.getData(), totalPrice);
+					}
+					else{
+						return r.errorMessage;
+					}
 				}
 			}
 			else{

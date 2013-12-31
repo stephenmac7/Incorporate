@@ -1,0 +1,232 @@
+{
+    "General": [
+        {
+            "name": "list",
+            "desc": "Lists all the companies currently in the game"
+        },
+        {
+            "name": "create",
+            "desc": "Creates a new company",
+            "usage": "<company> <console: player>"
+        },
+        {
+            "name": "delete",
+            "desc": "Deletes a company",
+            "usage": "<company>",
+            "permission": ["DELETE"]
+        },
+        {
+            "name": "rename",
+            "desc": "Renames a company",
+            "usage": "<company> <newName>",
+            "permission": ["RENAME"]
+        }
+    ],
+    "Rank": [
+        {
+            "name": "listRanks",
+            "desc": "Lists the ranks in a company",
+            "usage": "<company>",
+            "alias": "lr"
+        },
+        {
+            "name": "addRank",
+            "desc": "Adds a rank to a company",
+            "usage": "<company> <rank> <wage>",
+            "alias": "ar",
+            "permission": ["MANAGERANKS"]
+        },
+        {
+            "name": "removeRank",
+            "desc": "Removes an existing rank from a company",
+            "usage": "<company> <rank>",
+            "alias": "rr",
+            "permission": ["MANAGERANKS"]
+        },
+        {
+            "name": "getWage",
+            "desc": "Gets the wage of a rank",
+            "usage": "<company> <rank>",
+            "alias": "gw"
+        },
+        {
+            "name": "setWage",
+            "desc": "Sets the wage of a rank",
+            "usage": "<company> <rank> <wage>",
+            "alias": "sw",
+            "permission": ["MANAGERANKS"]
+        },
+        {
+            "name": "getDRank",
+            "desc": "Gets the default rank of a company<a href=\"#note1\"><sup>1</sup></a>",
+            "usage": "<company>",
+            "alias": "gdr"
+        },
+        {
+            "name": "setDRank",
+            "desc": "Sets the default rank of a company",
+            "usage": "<company>",
+            "alias": "sdr",
+            "permission": ["MANAGERANKS"]
+        }
+    ],
+    "Permission": [
+        {
+            "name": "grantPerm",
+            "desc": "Grants a permission to a rank",
+            "usage": "<company> <rank> <permission>",
+            "alias": "gp",
+            "permission": ["MANAGERANKS"]
+        },
+        {
+            "name": "revokePerm",
+            "desc": "Revokes a permission from a rank",
+            "usage": "<company> <rank> <permission>",
+            "alias": "rp",
+            "permission": ["MANAGERANKS"]
+        },
+        {
+            "name": "listPerms",
+            "desc": "Lists a rank's permissions",
+            "usage": "<company> <rank>",
+            "alias": "lp"
+        }
+    ],
+    "Employee": [
+        {
+            "name": "getRank",
+            "desc": "Gets an employee's rank",
+            "usage": "<company> <employee>",
+            "alias": "gr",
+            "permission": ["MANAGEEMPLOYEES"]
+        },
+        {
+            "name": "setRank",
+            "desc": "Sets an employee's rank",
+            "usage": "<company> <employee> <rank>",
+            "alias": "sr",
+            "permission": ["MANAGEEMPLOYEES"]
+        },
+        {
+            "name": "fire",
+            "desc": "Fires an employee",
+            "usage": "<company> <employee>",
+            "permission": ["FIRE"]
+        },
+        {
+            "name": "resign",
+            "desc": "Leaves a company",
+            "usage": "<company> <console: player>"
+        },
+        {
+            "name": "employees",
+            "desc": "Lists employees",
+            "usage": "<company>",
+            "alias": "empl"
+        },
+        {
+            "name": "payEmployees",
+            "desc": "Pays all employees",
+            "usage": "<company>",
+            "alias": "pe",
+            "permission": ["WITHDRAW", "MANAGEEMPLOYEES"]
+        }
+    ],
+    "Applicant": [
+        {
+            "name": "apply",
+            "desc": "Applies to a company",
+            "usage": "<company> <console: player>"
+        },
+        {
+            "name": "reject",
+            "desc": "Rejects an applicant",
+            "usage": "<company> <applicant>",
+            "permission": ["HIRE"]
+        },
+        {
+            "name": "hire",
+            "desc": "Hires an applicant",
+            "usage": "<company> <applicant>",
+            "permission": ["HIRE"]
+        },
+        {
+            "name": "applicants",
+            "desc": "Lists applicants",
+            "usage": "<company>",
+            "alias": "appl",
+            "permission": ["HIRE"]
+        }
+    ],
+    "Money": [
+        {
+            "name": "deposit",
+            "desc": "Deposits money",
+            "usage": "<company> <console: player> <amount>",
+            "alias": "dp"
+        },
+        {
+            "name": "withdraw",
+            "desc": "Withdraws money",
+            "usage": "<company> <console: player> <amount>",
+            "alias": "wd",
+            "permission": ["WITHDRAW"]
+        },
+        {
+            "name": "balance",
+            "desc": "Gets a company's balance",
+            "usage": "<company>",
+            "alias": "b",
+            "permission": ["GETBALANCE"]
+        }
+    ],
+    "Product": [
+        {
+            "name": "restock",
+            "desc": "Adds product(s) to stock",
+            "usage": "<company>"
+        },
+        {
+            "name": "recall",
+            "desc": "Removes products(s) from stock",
+            "usage": "<company> <itemNumber> <quantity>",
+            "permission": ["RECALL"]
+        },
+        {
+            "name": "price",
+            "desc": "Sets price a product can be bought/sold for",
+            "usage": "<company> <itemNumber> buy/sell <price>",
+            "permission": ["SETPRICE"]
+        },
+        {
+            "name": "buy",
+            "desc": "Buys an item",
+            "usage": "<company> <itemNumber> <quantity>"
+        },
+        {
+            "name": "sell",
+            "desc": "Sells an item",
+            "usage": "<company>"
+        },
+        {
+            "name": "browse",
+            "desc": "Lists a company's products",
+            "usage": "<company>",
+            "alias": "br"
+        },
+        {
+            "name": "productInfo",
+            "desc": "Displays information about the product, including the item number and the price",
+            "usage": "<company> <itemNumber>",
+            "alias": "pi"
+        }
+    ],
+    "Console": [
+        {
+            "name": "clean",
+            "desc": "Cleans up the database<a href=\"#note2\"><sup>2</sup></a>",
+            "usage": "<optional: y>"
+        }
+    ]
+}
+ 
