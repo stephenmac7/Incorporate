@@ -47,6 +47,6 @@ public class Product {
 	
 	@Override
 	public String toString(){
-		return String.format("%s (%f, %f)", this.item, this.buyPrice, this.sellPrice);
+		return String.format("%s: B %f, S %f Qty: %d", this.item, this.buyPrice, this.sellPrice, this.quantity);
 	}
 }

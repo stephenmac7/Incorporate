@@ -1,6 +1,8 @@
 package com.stephenmac.incorporate;
 
 import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.milkbowl.vault.economy.Economy;
 
@@ -17,6 +19,10 @@ import com.mongodb.MongoClient;
 public final class Incorporate extends JavaPlugin {
 	public Economy econ = null;
 	public CompanyDAO companyDAO;
+	public LinkedChestDAO linkedChestDAO;
+	
+	// Pending actions: Player name to action map, used for commands which require action
+	public Map<String, PendingAction> pendingActions = new HashMap<String, PendingAction>();
 
 	@Override
 	public void onEnable(){
@@ -36,14 +42,24 @@ public final class Incorporate extends JavaPlugin {
 		}
         Morphia morphia = new Morphia();
         morphia.map(Company.class).map(Rank.class);
+        
         // Setup datastore
 		MapperOptions opts = new MapperOptions();
 		opts.objectFactory = new CustomCreator(this.getClassLoader());
 		Mapper mapper = new Mapper(opts);
 		Datastore ds = new DatastoreImpl(mapper, mongoClient, "incorporate");
-		// Setup DAO
+		
+		// Setup DAOs
         companyDAO = new CompanyDAO(ds);
         companyDAO.ensureIndexes();
+        linkedChestDAO = new LinkedChestDAO(ds);
+        linkedChestDAO.ensureIndexes();
+        
+        // Setup Listeners
+        new PlayerInteractListener(this);
+        
+        // Setup Tasks
+        new ProcessLinkedChests(this).runTaskTimer(this, 10, 60);
         
         // Setup Commands
         getCommand("inc").setExecutor(new UserCommandExecutor(this));

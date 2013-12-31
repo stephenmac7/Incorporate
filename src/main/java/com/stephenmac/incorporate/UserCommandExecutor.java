@@ -1,6 +1,8 @@
 package com.stephenmac.incorporate;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,36 +19,41 @@ import org.bukkit.inventory.PlayerInventory;
 
 public class UserCommandExecutor implements CommandExecutor {
 	private CompanyDAO companyDAO;
-	public static Economy econ;
-	 
+	public Economy econ;
+	public Map<String, String> selections = new HashMap<String, String>();
+	public Map<String, PendingAction> pendingActions;
+	
 	public UserCommandExecutor(Incorporate plugin) {
 		companyDAO = plugin.companyDAO;
 		econ = plugin.econ;
+		pendingActions = plugin.pendingActions;
 	}
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if(args.length > 0){
-			String action = args[0];
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] argArray) {
+		ArgParser p = new ArgParser(sender, argArray, selections);
+		if(p.action != null){
 			String result;
 
-			if (action.equalsIgnoreCase("list")){
+			if (p.action.equals("list")){
 				result = listCompanies();
 			}
-			else if (action.equalsIgnoreCase("create")){
-				if (args.length == 2 && sender instanceof Player){
-					result = createCompany(args[1], ((Player) sender).getName());
+			else if (p.action.equals("create")){
+				String corp = p.getCorp();
+				if (corp != null && sender instanceof Player){
+					result = createCompany(corp, ((Player) sender).getName());
 				}
-				else if (args.length == 3 && !(sender instanceof Player)){
-					result = createCompany(args[1], args[2]);
+				else if (p.args.size() == 1 && !(sender instanceof Player)){
+					result = createCompany(corp, p.args.get(0));
 				}
 				else{
 					result = usageMessage("create <company> <console: player>");
 				}
 			}
-			else if (action.equalsIgnoreCase("delete")){
-				if (args.length == 2){
-					Company corp = getByName(args[1]);
+			else if (p.action.equals("delete")){
+				String corpName = p.getCorp();
+				if (corpName != null){
+					Company corp = getByName(corpName);
 					if (hasPerm(sender, corp, Permission.DELETE))
 						result = deleteCompany(corp);
 					else
@@ -56,27 +63,37 @@ public class UserCommandExecutor implements CommandExecutor {
 					result = usageMessage("delete <company>");
 				}
 			}
-			else if (action.equalsIgnoreCase("clean")){
+			else if (p.action.equals("clean")){
 				if (sender instanceof Player){
 					result = "Sorry, players cannot execute this command";
 				}
 				else{
-					if (args.length == 2)
-						result = cleanDb(args[1] == "y" ? true : false);
+					if (p.args.size() == 1)
+						result = cleanDb(p.args.get(0).equals("y") ? true : false);
 					else
 						result = cleanDb(false);
 				}
 			}
-			else if (args.length > 1){
-				Company corp = getByName(args[1]);
+			else if (p.getCorp() != null){
+				Company corp = getByName(p.getCorp());
 				String nConsole = "Must be a player to use this command";
 				
 				if (corp != null){
-					switch (action.toLowerCase()){
+					switch (p.action){
+					case "select":
+						selections.put(p.senderName, corp.getName());
+						result = corp.getName() + " selected";
+						break;
+					
+					case "deselect":
+						selections.remove(p.senderName);
+						result = corp.getName() + " deselected";
+						break;
+
 					case "rename":
-						if (args.length == 3){
+						if (p.args.size() == 1){
 							if (hasPerm(sender, corp, Permission.RENAME))
-								result = renameCompany(corp, args[2]);
+								result = renameCompany(corp, p.args.get(0));
 							else
 								result = permMessage("RENAME");
 						}
@@ -90,9 +107,9 @@ public class UserCommandExecutor implements CommandExecutor {
 						break;
 
 					case "ar": case "addrank":
-						if (args.length == 4){
+						if (p.args.size() == 2){
 							if (hasPerm(sender, corp, Permission.MANAGERANKS))
-								result = addRank(corp, args[2], args[3]);
+								result = addRank(corp, p.args.get(0), p.args.get(1));
 							else
 								result = permMessage("MANAGERANKS");
 						}
@@ -102,9 +119,9 @@ public class UserCommandExecutor implements CommandExecutor {
 						break;
 					
 					case "rr": case "removerank":
-						if (args.length == 3){
+						if (p.args.size() == 1){
 							if (hasPerm(sender, corp, Permission.MANAGERANKS))
-								result = removeRank(corp, args[2]);
+								result = removeRank(corp, p.args.get(0));
 							else
 								result = permMessage("MANAGERANKS");
 						}
@@ -114,8 +131,8 @@ public class UserCommandExecutor implements CommandExecutor {
 						break;
 					
 					case "gw": case "getwage":
-						if (args.length == 3){
-							result = getWage(corp, args[2]);
+						if (p.args.size() == 1){
+							result = getWage(corp, p.args.get(0));
 						}
 						else{
 							result = usageMessage("getWage <company> <rank>");
@@ -123,9 +140,9 @@ public class UserCommandExecutor implements CommandExecutor {
 						break;
 
 					case "sw": case "setwage":
-						if (args.length == 4){
+						if (p.args.size() == 2){
 							if (hasPerm(sender, corp, Permission.MANAGERANKS))
-								result = setWage(corp, args[2], args[3]);
+								result = setWage(corp, p.args.get(0), p.args.get(1));
 							else
 								result = permMessage("MANAGERANKS");
 						}
@@ -139,10 +156,10 @@ public class UserCommandExecutor implements CommandExecutor {
 						break;
 					
 					case "sdr": case "setdrank":
-						if (args.length == 3){
+						if (p.args.size() == 1){
 							if (hasPerm(sender, corp, Permission.MANAGERANKS)){
-								if(corp.setDefault(args[2]))
-									result = "Successfully changed " + corp.getName() + "'s default rank to " + args[2];
+								if(corp.setDefault(p.args.get(0)))
+									result = "Successfully changed " + corp.getName() + "'s default rank to " + p.args.get(0);
 								else
 									result = "Rank does not exist";
 							}
@@ -156,9 +173,9 @@ public class UserCommandExecutor implements CommandExecutor {
 						break;
 					
 					case "gp": case "grantperm":
-						if (args.length == 4){
+						if (p.args.size() == 2){
 							if (hasPerm(sender, corp, Permission.MANAGERANKS))
-								result = grantPerm(corp, args[2], args[3]);
+								result = grantPerm(corp, p.args.get(0), p.args.get(1));
 							else
 								result = permMessage("MANAGERANKS");
 						}
@@ -168,9 +185,9 @@ public class UserCommandExecutor implements CommandExecutor {
 						break;
 					
 					case "rp": case "revokeperm":
-						if (args.length == 4){
+						if (p.args.size() == 2){
 							if (hasPerm(sender, corp, Permission.MANAGERANKS))
-								result = revokePerm(corp, args[2], args[3]);
+								result = revokePerm(corp, p.args.get(0), p.args.get(1));
 							else
 								result = permMessage("MANAGERANKS");
 						}
@@ -180,8 +197,8 @@ public class UserCommandExecutor implements CommandExecutor {
 						break;
 					
 					case "lp": case "listperms":
-						if(args.length == 3){
-							result = listPerms(corp, args[2]);
+						if(p.args.size() == 1){
+							result = listPerms(corp, p.args.get(0));
 						}
 						else{
 							result = usageMessage("listPerms <company> <rank>");
@@ -189,8 +206,8 @@ public class UserCommandExecutor implements CommandExecutor {
 						break;
 
 					case "gr": case "getrank":
-						if (args.length == 3){
-							result = getRank(corp, args[2]);
+						if (p.args.size() == 1){
+							result = getRank(corp, p.args.get(0));
 						}
 						else{
 							result = usageMessage("getRank <company> <employee>");
@@ -198,9 +215,9 @@ public class UserCommandExecutor implements CommandExecutor {
 						break;
 					
 					case "sr": case "setrank":
-						if (args.length == 4){
+						if (p.args.size() == 2){
 							if (hasPerm(sender, corp, Permission.MANAGEEMPLOYEES))
-								result = setRank(corp, args[2], args[3]);
+								result = setRank(corp, p.args.get(0), p.args.get(1));
 							else
 								result = permMessage("MANAGEEMPLOYEES");
 						}
@@ -210,9 +227,9 @@ public class UserCommandExecutor implements CommandExecutor {
 						break;
 					
 					case "fire":
-						if (args.length == 3){
+						if (p.args.size() == 1){
 							if (hasPerm(sender, corp, Permission.FIRE))
-								result = fire(corp, args[2]);
+								result = fire(corp, p.args.get(0));
 							else
 								result = permMessage("FIRE");
 						}
@@ -222,12 +239,12 @@ public class UserCommandExecutor implements CommandExecutor {
 						break;
 					
 					case "resign":
-						if (args.length == 2 && sender instanceof Player){
+						if (sender instanceof Player){
 							result = resign(corp, ((Player) sender).getName());
 						}
 						else{
-							if (args.length == 3){
-								result = resign(corp, args[2]);
+							if (p.args.size() == 1){
+								result = resign(corp, p.args.get(0));
 							}
 							else{
 								result = usageMessage("resign <company> <console: player>");
@@ -252,8 +269,8 @@ public class UserCommandExecutor implements CommandExecutor {
 							result = apply(corp, ((Player) sender).getName());
 						}
 						else{
-							if (args.length == 3){
-								result = apply(corp, args[2]);
+							if (p.args.size() == 1){
+								result = apply(corp, p.args.get(0));
 							}
 							else{
 								result = usageMessage("apply <company> <console: player>");
@@ -262,9 +279,9 @@ public class UserCommandExecutor implements CommandExecutor {
 						break;
 					
 					case "reject":
-						if (args.length == 3){
+						if (p.args.size() == 1){
 							if (hasPerm(sender, corp, Permission.HIRE))
-								result = reject(corp, args[2]);
+								result = reject(corp, p.args.get(0));
 							else
 								result = permMessage("HIRE");
 						}
@@ -274,9 +291,9 @@ public class UserCommandExecutor implements CommandExecutor {
 						break;
 					
 					case "hire":
-						if (args.length == 3){
+						if (p.args.size() == 1){
 							if (hasPerm(sender, corp, Permission.HIRE))
-								result = hire(corp, args[2]);
+								result = hire(corp, p.args.get(0));
 							else
 								result = permMessage("HIRE");
 						}
@@ -293,23 +310,23 @@ public class UserCommandExecutor implements CommandExecutor {
 						break;
 					
 					case "dp": case "deposit":
-						if (sender instanceof Player && args.length == 3)
-							result = deposit(corp, ((Player) sender).getName(), args[2]);
-						else if (!(sender instanceof Player) && args.length == 4)
-							result = deposit(corp, args[2], args[3]);
+						if (sender instanceof Player && p.args.size() == 1)
+							result = deposit(corp, ((Player) sender).getName(), p.args.get(0));
+						else if (!(sender instanceof Player) && p.args.size() == 2)
+							result = deposit(corp, p.args.get(0), p.args.get(1));
 						else
 							result = usageMessage("deposit <company> <console: player> <amount>");
 						break;
 					
 					case "wd": case "withdraw":
-						if (sender instanceof Player && args.length == 3){
+						if (sender instanceof Player && p.args.size() == 1){
 							if (hasPerm(sender, corp, Permission.WITHDRAW))
-								result = withdraw(corp, ((Player) sender).getName(), args[2]);
+								result = withdraw(corp, ((Player) sender).getName(), p.args.get(0));
 							else
 								result = permMessage("WITHDRAW");
 						}
-						else if (!(sender instanceof Player) && args.length == 4){
-							result = withdraw(corp, args[2], args[3]);
+						else if (!(sender instanceof Player) && p.args.size() == 2){
+							result = withdraw(corp, p.args.get(0), p.args.get(1));
 						}
 						else{
 							result = usageMessage("withdraw <company> <console: player> <amount>");
@@ -331,10 +348,10 @@ public class UserCommandExecutor implements CommandExecutor {
 						break;
 					
 					case "recall":
-						if (args.length == 4){
+						if (p.args.size() == 2){
 							if (sender instanceof Player){
 								if (hasPerm(sender, corp, Permission.RECALL))
-									result = recall(corp, (Player) sender, args[2], args[3]);
+									result = recall(corp, (Player) sender, p.args.get(0), p.args.get(1));
 								else
 									result = permMessage("RECALL");
 							}
@@ -348,9 +365,9 @@ public class UserCommandExecutor implements CommandExecutor {
 						break;
 					
 					case "price":
-						if (args.length == 5){
+						if (p.args.size() == 3){
 							if (hasPerm(sender, corp, Permission.SETPRICE))
-								result = price(corp, args[2], args[3], args[4]);
+								result = price(corp, p.args.get(0), p.args.get(1), p.args.get(2));
 							else
 								result = permMessage("SETPRICE");
 						}
@@ -360,9 +377,9 @@ public class UserCommandExecutor implements CommandExecutor {
 						break;
 					
 					case "buy":
-						if (args.length == 4){
+						if (p.args.size() == 2){
 							if (sender instanceof Player)
-								result = buy(corp, (Player) sender, args[2], args[3]);
+								result = buy(corp, (Player) sender, p.args.get(0), p.args.get(1));
 							else
 								result = nConsole;
 						}
@@ -383,13 +400,39 @@ public class UserCommandExecutor implements CommandExecutor {
 						break;
 					
 					case "pi": case "productInfo":
-						if (args.length == 3){
-							result = productInfo(corp, args[2]);
+						if (p.args.size() == 1){
+							result = productInfo(corp, p.args.get(0));
 						}
 						else{
 							result = usageMessage("productInfo <company> <itemNumber>");
 						}
 						break;
+					
+					case "rsc":
+						if (sender instanceof Player){
+							PendingAction rcAction = new PendingAction("linkChest", "restock", corp);
+							pendingActions.put(((Player) sender).getName(), rcAction);
+							result = "Please click on the chest which you would like to link as a restocking chest";
+						}
+						else
+							result = nConsole;
+						break;
+					
+					case "ulc":
+						if (sender instanceof Player){
+							PendingAction ulAction = new PendingAction("unlinkChest", corp);
+							pendingActions.put(((Player) sender).getName(), ulAction);
+							result = "Please click on the chest which you would like to unlink";
+						}
+						else
+							result = nConsole;
+						break;
+					
+					case "cancel":
+						if (sender instanceof Player){
+							pendingActions.remove(((Player) sender).getName());
+							result = "Canceled";
+						}
 		
 					default:
 						result = "Action does not exist";
@@ -424,19 +467,23 @@ public class UserCommandExecutor implements CommandExecutor {
 				for (String rank : c.getEmployeeValues()){
 					ranks.add(rank);
 				}
-				for (Rank r : c.getRanks()){
-					if (!ranks.contains(r.name)){
-						c.removeRank(r.name);
+				Iterator<Rank> rankIt = c.getRanks().iterator();
+				while (rankIt.hasNext()){
+					if (!ranks.contains(rankIt.next().name)){
+						rankIt.remove();
 					}
 				}
+				
 				// Clean up products
-				for (Product p : c.getProducts()){
+				Iterator<Product> productIt = c.getProducts().iterator();
+				while (productIt.hasNext()){
+					Product p = productIt.next();
 					if (p.getQuantity() == 0){
 						if (aggressive){
-							c.removeProduct(p);
+							productIt.remove();
 						}
 						else if(p.getBuyPrice() == null && p.getSellPrice() == null){
-							c.removeProduct(p);
+							productIt.remove();
 						}
 					}
 				}
@@ -459,10 +506,16 @@ public class UserCommandExecutor implements CommandExecutor {
 
 	private String createCompany(String name, String player){
 		if (getByName(name) == null){
-			Company company = new Company();
-			company.setName(name);
-			company.addEmployee(player);
-			companyDAO.save(company);
+			EconomyResponse r = econ.withdrawPlayer(player, 200);
+			if (r.transactionSuccess()){
+				Company company = new Company();
+				company.setName(name);
+				company.addEmployee(player);
+				companyDAO.save(company);
+			}
+			else{
+				return r.errorMessage;
+			}
 
 			return String.format("Successfully created %s with %s as owner", name, player);
 		}
@@ -715,7 +768,6 @@ public class UserCommandExecutor implements CommandExecutor {
 		return company.getName() + "'s balance is: " + company.getBalance();
 	}
 	
-	@SuppressWarnings("deprecation")
 	private String restock(Company company, Player player){
 		// Get item stack
 		PlayerInventory pinv = player.getInventory();
@@ -725,8 +777,7 @@ public class UserCommandExecutor implements CommandExecutor {
 		int quan = cur_stack.getAmount();
 		if (quan > 0){
 			Item item = new Item();
-			item.setData(cur_stack.getData().getData());
-			item.setId(cur_stack.getTypeId());
+			item.fromStack(cur_stack);
 			
 			// Delete it from player
 			pinv.clear(pinv.getHeldItemSlot());
@@ -763,7 +814,7 @@ public class UserCommandExecutor implements CommandExecutor {
 	}
 	
 	private String price(Company company, String item, String buySell, String price){
-		Double pPrice = price == "null" ? null : Double.parseDouble(price);
+		Double pPrice = price.equals("null") ? null : Double.parseDouble(price);
 		if (pPrice > 0){
 			Item parsed = parseItem(item);
 			Product p = company.getProduct(parsed, true);
@@ -808,7 +859,7 @@ public class UserCommandExecutor implements CommandExecutor {
 						p.adjustQuantity(-quan);
 						company.adjustBalance(totalPrice);
 						givePlayer(player, parsed, quan);
-						return String.format("Bought %d of %s from %s for %f", quantity, item, company.getName(), totalPrice);
+						return String.format("Bought %d of %s from %s for %f", quan, item, company.getName(), totalPrice);
 					}
 					else{
 						return r.errorMessage;
@@ -824,7 +875,6 @@ public class UserCommandExecutor implements CommandExecutor {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	private String sell(Company company, Player player){
 		// Get item stack
 		PlayerInventory pinv = player.getInventory();
@@ -834,8 +884,7 @@ public class UserCommandExecutor implements CommandExecutor {
 		int quan = cur_stack.getAmount();
 		if (quan > 0){
 			Item item = new Item();
-			item.setData(cur_stack.getData().getData());
-			item.setId(cur_stack.getTypeId());
+			item.fromStack(cur_stack);
 			Product p = company.getProduct(item);
 			
 			if (p != null && p.getSellPrice() != null){
@@ -874,9 +923,9 @@ public class UserCommandExecutor implements CommandExecutor {
 	
 	private String browse(Company company){
 		StringBuilder s = new StringBuilder();
+		s.append("      Id |     Buy |     Sell |   Qty\n");
 		for (Product p : company.getProducts()){
-			if (p.getBuyPrice() != null || p.getSellPrice() != null)
-				s.append(String.format("%s\n", p));
+			s.append(String.format("%8s |%8.2f |%8.2f |%6d\n", p.getItem(), p.getBuyPrice(), p.getSellPrice(), p.getQuantity()));
 		}
 		return s.toString();
 	}

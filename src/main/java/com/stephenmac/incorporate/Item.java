@@ -1,5 +1,6 @@
 package com.stephenmac.incorporate;
 
+import org.bukkit.inventory.ItemStack;
 import org.mongodb.morphia.annotations.Embedded;
 
 @Embedded
@@ -18,6 +19,11 @@ public class Item {
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+	@SuppressWarnings("deprecation")
+	public void fromStack(ItemStack stack){
+		data = stack.getData().getData();
+		id = stack.getTypeId();
 	}
 	
 	public boolean equals(Object obj){

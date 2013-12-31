@@ -20,6 +20,15 @@
             "desc": "Renames a company",
             "usage": "<company> <newName>",
             "permission": ["RENAME"]
+        },
+        {
+            "name": "select",
+            "desc": "Selects a company, allowing player to omit company argument"
+            "usage": "<company>",
+        },
+        {
+            "name": "deselect",
+            "desc": "Deselects a company"
         }
     ],
     "Rank": [
@@ -219,6 +228,21 @@
             "desc": "Displays information about the product, including the item number and the price",
             "usage": "<company> <itemNumber>",
             "alias": "pi"
+        },
+        {
+            "name": "rsc",
+            "desc": "Links a restock chest, which automatically puts all items in stock",
+            "usage": "<company>"
+        },
+        {
+            "name": "ulc",
+            "desc": "Unlinks a chest",
+            "usage": "<company>"
+        },
+        {
+            "name": "cancel",
+            "desc": "Cancels a linking/unlinking operation",
+            "usage": "<company>"
         }
     ],
     "Console": [
