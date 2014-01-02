@@ -5,13 +5,11 @@ import com.stephenmac.incorporate.Executor;
 import com.stephenmac.incorporate.Permission;
 
 public class GetWageCommand extends Command {
-	public static String[] names = {"getWage", "gw"};
-	public static int nArgs = 1;
-	public static String usage = "<rank>";
-	public static Permission[] perms = {Permission.BASIC};
 	
 	public GetWageCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
+		usage = "<rank>";
+		perms.add(Permission.BASIC);
 	}
 
 	@Override

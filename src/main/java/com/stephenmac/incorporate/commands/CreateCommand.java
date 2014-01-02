@@ -7,13 +7,11 @@ import com.stephenmac.incorporate.Company;
 import com.stephenmac.incorporate.Executor;
 
 public class CreateCommand extends Command {
-	public static String[] names = {"create"};
-	public static int nArgs = 1;
-	public static boolean needsPlayer = true;
-	public static boolean validCorp = false;
 	
 	public CreateCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
+		needsPlayer = true;
+		validCorp = false;
 	}
 
 	@Override

@@ -9,7 +9,6 @@ import com.stephenmac.incorporate.Item;
 import com.stephenmac.incorporate.Product;
 
 public class RestockCommand extends PlayerContextCommand {
-	public static String[] names = {"restock", "rs"};
 	
 	public RestockCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);

@@ -4,12 +4,10 @@ import com.stephenmac.incorporate.ArgParser;
 import com.stephenmac.incorporate.Executor;
 
 public class GetRankCommand extends Command {
-	public static String[] names = {"getRank", "gr"};
-	public static int nArgs = 1;
-	public static String usage = "<employee>";
 	
 	public GetRankCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
+		usage = "<employee>";
 	}
 
 	@Override

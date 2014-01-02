@@ -4,7 +4,6 @@ import com.stephenmac.incorporate.ArgParser;
 import com.stephenmac.incorporate.Executor;
 
 public class GetDefaultRankCommand extends Command {
-	public static String[] names = {"getDRank", "getDefaultRank", "gdr"};
 
 	public GetDefaultRankCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);

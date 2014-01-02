@@ -5,13 +5,11 @@ import com.stephenmac.incorporate.Executor;
 import com.stephenmac.incorporate.Permission;
 
 public class RenameCommand extends Command {
-	public static String[] names = {"rename"};
-	public static int nArgs = 1;
-	public static String usage = "<newName>";
-	public static Permission[] perms = {Permission.RENAME};
 	
 	public RenameCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
+		usage = "<newName>";
+		perms.add(Permission.RENAME);
 	}
 
 	@Override

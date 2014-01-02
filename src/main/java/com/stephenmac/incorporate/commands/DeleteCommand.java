@@ -5,11 +5,10 @@ import com.stephenmac.incorporate.Executor;
 import com.stephenmac.incorporate.Permission;
 
 public class DeleteCommand extends Command {
-	public static String[] names = {"delete"};
-	public static Permission[] perms = {Permission.DELETE};
 	
 	public DeleteCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
+		perms.add(Permission.DELETE);
 	}
 
 	@Override

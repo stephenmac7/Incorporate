@@ -6,7 +6,6 @@ import com.stephenmac.incorporate.ArgParser;
 import com.stephenmac.incorporate.Executor;
 
 public class ListEmployeesCommand extends Command {
-	public static String[] names = {"employees", "empl"};
 	
 	public ListEmployeesCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);

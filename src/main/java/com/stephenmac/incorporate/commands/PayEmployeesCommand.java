@@ -10,11 +10,11 @@ import com.stephenmac.incorporate.Permission;
 import com.stephenmac.incorporate.Rank;
 
 public class PayEmployeesCommand extends Command {
-	public static String[] names = {"payEmployees", "pe"};
-	public static Permission[] perms = {Permission.MANAGEEMPLOYEES, Permission.WITHDRAW};
 	
 	public PayEmployeesCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
+		perms.add(Permission.MANAGEEMPLOYEES);
+		perms.add(Permission.WITHDRAW);
 	}
 
 	@Override

@@ -5,13 +5,11 @@ import com.stephenmac.incorporate.Executor;
 import com.stephenmac.incorporate.Permission;
 
 public class SetRankCommand extends Command {
-	public static String[] names = {"setRank", "sr"};
-	public static int nArgs = 2;
-	public static String usage = "<employee> <rank>";
-	public static Permission[] perms = {Permission.MANAGEEMPLOYEES};
 	
 	public SetRankCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
+		usage = "<employee> <rank>";
+		perms.add(Permission.MANAGEEMPLOYEES);
 	}
 
 	@Override

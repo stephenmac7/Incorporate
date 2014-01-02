@@ -7,13 +7,11 @@ import com.stephenmac.incorporate.Permission;
 import com.stephenmac.incorporate.Product;
 
 public class RecallCommand extends PlayerContextCommand {
-	public static String[] names = {"recall", "rc"};
-	public static int nArgs = 2;
-	public static String usage = "<item> <quantity>";
-	public static Permission[] perms = {Permission.RECALL};
 	
 	public RecallCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
+		usage = "<item> <quantity>";
+		perms.add(Permission.RECALL);
 	}
 
 	@Override

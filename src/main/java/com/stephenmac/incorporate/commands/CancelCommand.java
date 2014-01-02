@@ -5,11 +5,10 @@ import com.stephenmac.incorporate.Executor;
 import com.stephenmac.incorporate.PendingAction;
 
 public class CancelCommand extends Command {
-	public static String[] names = {"cancel"};
-	public static boolean needsPlayer = true;
 
 	public CancelCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
+		needsPlayer = true;
 	}
 
 	@Override

@@ -1,5 +1,8 @@
 package com.stephenmac.incorporate.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.stephenmac.incorporate.ArgParser;
 import com.stephenmac.incorporate.Company;
 import com.stephenmac.incorporate.Executor;
@@ -8,21 +11,19 @@ import com.stephenmac.incorporate.Permission;
 
 public abstract class Command {
 	// Info Variables
-	/// Commands
-	public static String[] names;
 	/// Number of arguments required
-	public static int nArgs = 0;
+	protected int nArgs = -1;
 	/// Help Text
-	public static String usage = null;
+	protected String usage = null;
 	/// Permissions required
-	public static Permission[] perms = null;
+	protected List<Permission> perms = new ArrayList<Permission>();
 	
 	/// Requires a corporation?
-	public static boolean needsCorp = true;
+	protected boolean needsCorp = true;
 	//// If so, must it be valid?
-	public static boolean validCorp = true;
+	protected boolean validCorp = true;
 	/// Requires a player name?
-	public static boolean needsPlayer = false;
+	protected boolean needsPlayer = false;
 	
 	// Runtime Variables
 	/// Parsed arguments
@@ -42,11 +43,22 @@ public abstract class Command {
 	public abstract String execute();
 	
 	public boolean validate(){
-		return (needsCorp ? p.ensureCorp() && (validCorp ? getCompany() != null : true) : true)
+		return (needsCorp ? (p.ensureCorp() && (validCorp ? getCompany() != null : true)) : true)
 				&& (needsPlayer ? p.ensurePlayer() : true)
-				&& p.args.size() == nArgs;
+				&& p.args.size() == getNArgs();
 	}
 	
+	private int getNArgs() {
+		if (nArgs != -1)
+			return nArgs;
+		else{
+			if (usage == null)
+				return 0;
+			else
+				return usage.split(" ").length;
+		}
+	}
+
 	public void cleanup(){
 		if (corp != null)
 			cmdExec.companyDAO.save(corp);
@@ -55,9 +67,7 @@ public abstract class Command {
 	/// Messages
 	public String usageMessage(){
 		StringBuilder s = new StringBuilder();
-		s.append("/inc ");
-		if (names.length > 0)
-			s.append(names[0]);
+		s.append("/inc " + p.action);
 		if (needsCorp)
 			s.append(" <company>");
 		if (needsPlayer)
@@ -88,7 +98,7 @@ public abstract class Command {
 	}
 	
 	public boolean checkPermission(){
-		return (perms != null && p.senderIsPlayer) ? p.player.hasPermission("inc.admin") || allPerms() : true;
+		return (!perms.isEmpty() && p.senderIsPlayer) ? p.player.hasPermission("inc.admin") || allPerms() : true;
 	}
 	
 	protected boolean allPerms(){

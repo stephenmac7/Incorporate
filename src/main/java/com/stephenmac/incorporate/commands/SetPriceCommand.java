@@ -7,13 +7,11 @@ import com.stephenmac.incorporate.Permission;
 import com.stephenmac.incorporate.Product;
 
 public class SetPriceCommand extends Command {
-	public static String[] names = {"price", "setPrice", "sp"};
-	public static int nArgs = 3;
-	public static String usage = "<item> <buy/sell> <price>";
-	public static Permission[] perms = {Permission.SETPRICE};
 	
 	public SetPriceCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
+		usage = "<item> <buy/sell> <price>";
+		perms.add(Permission.SETPRICE);
 	}
 
 	@Override

@@ -7,10 +7,10 @@ import com.stephenmac.incorporate.Executor;
 import com.stephenmac.incorporate.Item;
 
 public abstract class PlayerContextCommand extends Command {
-	public static boolean needsPlayer = true;
 	
 	public PlayerContextCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
+		needsPlayer = true;
 	}
 	
 	public boolean validate(){

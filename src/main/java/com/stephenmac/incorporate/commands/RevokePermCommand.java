@@ -5,13 +5,11 @@ import com.stephenmac.incorporate.Executor;
 import com.stephenmac.incorporate.Permission;
 
 public class RevokePermCommand extends Command {
-	public static String[] names = {"revokePerm", "rp"};
-	public static int nArgs = 2;
-	public static String usage = "<rank> <perm>";
-	public static Permission[] perms = {Permission.MANAGERANKS};
 	
 	public RevokePermCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
+		usage = "<rank> <perm>";
+		perms.add(Permission.MANAGERANKS);
 	}
 
 	@Override

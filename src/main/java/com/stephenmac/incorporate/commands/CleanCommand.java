@@ -12,11 +12,10 @@ import com.stephenmac.incorporate.Product;
 import com.stephenmac.incorporate.Rank;
 
 public class CleanCommand extends Command {
-	public static String[] names = {"clean"};
-	public static boolean needsCorp = false;
 	
 	public CleanCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
+		needsCorp = false;
 	}
 
 	@Override

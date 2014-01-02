@@ -11,7 +11,6 @@ import com.stephenmac.incorporate.Item;
 import com.stephenmac.incorporate.Product;
 
 public class SellCommand extends PlayerContextCommand {
-	public static String[] names = {"sell"};
 
 	public SellCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);

@@ -5,13 +5,11 @@ import com.stephenmac.incorporate.Executor;
 import com.stephenmac.incorporate.Permission;
 
 public class RejectCommand extends Command {
-	public static String[] names = {"reject"};
-	public static int nArgs = 1;
-	public static String usage = "<applicant>";
-	public static Permission[] perms = {Permission.HIRE};
 	
 	public RejectCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
+		usage = "<applicant>";
+		perms.add(Permission.HIRE);
 	}
 
 	@Override

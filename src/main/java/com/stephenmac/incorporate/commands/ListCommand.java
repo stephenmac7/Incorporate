@@ -7,11 +7,9 @@ import com.stephenmac.incorporate.Company;
 import com.stephenmac.incorporate.Executor;
 
 public final class ListCommand extends Command {
-	public static String[] names = {"list"};
-	public static boolean needsCorp = false;
-	
 	public ListCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
+		needsCorp = false;
 	}
 
 	@Override

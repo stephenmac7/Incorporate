@@ -5,11 +5,10 @@ import com.stephenmac.incorporate.Executor;
 import com.stephenmac.incorporate.PendingAction;
 
 public class UnlinkCommand extends Command {
-	public static String[] names = {"unlink"};
-	public static boolean needsPlayer = true;
 	
 	public UnlinkCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
+		needsPlayer = true;
 	}
 
 	@Override

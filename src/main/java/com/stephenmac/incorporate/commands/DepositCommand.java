@@ -6,13 +6,11 @@ import com.stephenmac.incorporate.ArgParser;
 import com.stephenmac.incorporate.Executor;
 
 public class DepositCommand extends Command {
-	public static String[] names = {"deposit", "dp"};
-	public static int nArgs = 1;
-	public static String usage = "<amount>";
-	public static boolean needsPlayer = true;
 	
 	public DepositCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
+		usage = "<amount>";
+		needsPlayer = true;
 	}
 
 	@Override

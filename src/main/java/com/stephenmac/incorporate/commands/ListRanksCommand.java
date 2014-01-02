@@ -8,11 +8,10 @@ import com.stephenmac.incorporate.Permission;
 import com.stephenmac.incorporate.Rank;
 
 public class ListRanksCommand extends Command {
-	public static String[] names = {"listranks", "lr"};
-	public static Permission[] perms = {Permission.BASIC};
 	
 	public ListRanksCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
+		perms.add(Permission.BASIC);
 	}
 
 	@Override

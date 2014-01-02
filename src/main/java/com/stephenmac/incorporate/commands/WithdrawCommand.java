@@ -7,14 +7,12 @@ import com.stephenmac.incorporate.Executor;
 import com.stephenmac.incorporate.Permission;
 
 public class WithdrawCommand extends Command {
-	public static String[] names = {"withdraw", "wd"};
-	public static int nArgs = 1;
-	public static String usage = "<amount>";
-	public static Permission[] perms = {Permission.WITHDRAW};
-	public static boolean needsPlayer = true;
 	
 	public WithdrawCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
+		usage = "<amount>";
+		perms.add(Permission.WITHDRAW);
+		needsPlayer = true;
 	}
 
 	@Override

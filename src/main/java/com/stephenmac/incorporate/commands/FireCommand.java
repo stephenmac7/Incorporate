@@ -5,13 +5,11 @@ import com.stephenmac.incorporate.Executor;
 import com.stephenmac.incorporate.Permission;
 
 public class FireCommand extends Command {
-	public static String[] names = {"fire"};
-	public static int nArgs = 1;
-	public static String usage = "<employee>";
-	public static Permission[] perms = {Permission.FIRE};
 	
 	public FireCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
+		usage = "<employee>";
+		perms.add(Permission.FIRE);
 	}
 
 	@Override

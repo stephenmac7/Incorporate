@@ -4,11 +4,10 @@ import com.stephenmac.incorporate.ArgParser;
 import com.stephenmac.incorporate.Executor;
 
 public class ApplyCommand extends Command {
-	public static String[] names = {"apply"};
-	public static boolean needsPlayer = true;
 
 	public ApplyCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
+		needsPlayer = true;
 	}
 
 	@Override

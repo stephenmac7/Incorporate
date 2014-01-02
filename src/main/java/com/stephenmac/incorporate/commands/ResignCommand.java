@@ -4,11 +4,10 @@ import com.stephenmac.incorporate.ArgParser;
 import com.stephenmac.incorporate.Executor;
 
 public class ResignCommand extends Command {
-	public static String[] names = {"resign"};
-	public static boolean needsPlayer = true;
 	
 	public ResignCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
+		needsPlayer = true;
 	}
 
 	@Override

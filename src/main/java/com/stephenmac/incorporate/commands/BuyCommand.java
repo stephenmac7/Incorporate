@@ -8,12 +8,10 @@ import com.stephenmac.incorporate.Item;
 import com.stephenmac.incorporate.Product;
 
 public class BuyCommand extends PlayerContextCommand {
-	public static String[] names = {"buy"};
-	public static int nArgs = 2;
-	public static String usage = "<item> <quantity>";
 	
 	public BuyCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
+		usage = "<item> <quantity>";
 	}
 
 	@Override

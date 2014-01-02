@@ -7,13 +7,12 @@ import com.stephenmac.incorporate.PendingAction;
 import com.stephenmac.incorporate.Permission;
 
 public class LinkCommand extends Command {
-	public static String[] names = {"link"};
-	public static int nArgs = 1;
-	public static String usage = "<linkType> <recall/buy: item> <recall/buy: amount>";
-	public static boolean needsPlayer = true;
 	
 	public LinkCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
+		nArgs = 1;
+		usage = "<linkType> <recall/buy: item> <recall/buy: amount>";
+		needsPlayer = true;
 	}
 
 	@Override

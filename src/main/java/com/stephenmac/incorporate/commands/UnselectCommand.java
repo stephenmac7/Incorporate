@@ -4,12 +4,11 @@ import com.stephenmac.incorporate.ArgParser;
 import com.stephenmac.incorporate.Executor;
 
 public class UnselectCommand extends Command {
-	public static String[] names = {"unselect"};
-	public static boolean needsCorp = false;
-	public static boolean needsPlayer = true;
 	
 	public UnselectCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
+		needsCorp = false;
+		needsPlayer = true;
 	}
 
 	@Override

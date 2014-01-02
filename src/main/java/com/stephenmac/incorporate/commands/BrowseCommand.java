@@ -5,7 +5,6 @@ import com.stephenmac.incorporate.Executor;
 import com.stephenmac.incorporate.Product;
 
 public class BrowseCommand extends Command {
-	public static String[] names = {"browse", "br"};
 	
 	public BrowseCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
