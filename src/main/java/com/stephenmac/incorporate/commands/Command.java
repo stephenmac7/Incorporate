@@ -55,9 +55,9 @@ public abstract class Command {
 	/// Messages
 	public String usageMessage(){
 		StringBuilder s = new StringBuilder();
-		s.append("/inc");
+		s.append("/inc ");
 		if (names.length > 0)
-			s.append("/inc " + names[0]);
+			s.append(names[0]);
 		if (needsCorp)
 			s.append(" <company>");
 		if (needsPlayer)
