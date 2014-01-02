@@ -8,6 +8,184 @@
             <div class="col-lg-12">
                 <h1>Incorporate Commands</h1>
                 <hr>
+                <h2>Rank Commands</h2>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Usage</th>
+                            <th>Alias</th>
+                            <th>Permission</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>listRanks</td>
+                            <td>Lists the ranks in a company</td>
+                            <td>/inc listRanks &lt;company&gt;</td>
+                            <td>lr</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td>addRank</td>
+                            <td>Adds a rank to a company</td>
+                            <td>/inc addRank &lt;company&gt; &lt;rank&gt; &lt;wage&gt;</td>
+                            <td>ar</td>
+                            <td>MANAGERANKS</td>
+                        </tr>
+                        <tr>
+                            <td>removeRank</td>
+                            <td>Removes an existing rank from a company</td>
+                            <td>/inc removeRank &lt;company&gt; &lt;rank&gt;</td>
+                            <td>rr</td>
+                            <td>MANAGERANKS</td>
+                        </tr>
+                        <tr>
+                            <td>getWage</td>
+                            <td>Gets the wage of a rank</td>
+                            <td>/inc getWage &lt;company&gt; &lt;rank&gt;</td>
+                            <td>gw</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td>setWage</td>
+                            <td>Sets the wage of a rank</td>
+                            <td>/inc setWage &lt;company&gt; &lt;rank&gt; &lt;wage&gt;</td>
+                            <td>sw</td>
+                            <td>MANAGERANKS</td>
+                        </tr>
+                        <tr>
+                            <td>getDRank</td>
+                            <td>Gets the default rank of a company<a href="#note1"><sup>1</sup></a></td>
+                            <td>/inc getDRank &lt;company&gt;</td>
+                            <td>gdr</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td>setDRank</td>
+                            <td>Sets the default rank of a company</td>
+                            <td>/inc setDRank &lt;company&gt;</td>
+                            <td>sdr</td>
+                            <td>MANAGERANKS</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr>
+                <h2>General Commands</h2>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Usage</th>
+                            <th>Alias</th>
+                            <th>Permission</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>list</td>
+                            <td>Lists all the companies currently in the game</td>
+                            <td>/inc list </td>
+                            <td>None</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td>create</td>
+                            <td>Creates a new company</td>
+                            <td>/inc create &lt;company&gt; &lt;console: player&gt;</td>
+                            <td>None</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td>delete</td>
+                            <td>Deletes a company</td>
+                            <td>/inc delete &lt;company&gt;</td>
+                            <td>None</td>
+                            <td>DELETE</td>
+                        </tr>
+                        <tr>
+                            <td>rename</td>
+                            <td>Renames a company</td>
+                            <td>/inc rename &lt;company&gt; &lt;newName&gt;</td>
+                            <td>None</td>
+                            <td>RENAME</td>
+                        </tr>
+                        <tr>
+                            <td>select</td>
+                            <td>Selects a company, allowing player to omit company argument</td>
+                            <td>/inc select &lt;company&gt;</td>
+                            <td>None</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td>deselect</td>
+                            <td>Deselects a company</td>
+                            <td>/inc deselect </td>
+                            <td>None</td>
+                            <td>None</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr>
+                <h2>Employee Commands</h2>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Usage</th>
+                            <th>Alias</th>
+                            <th>Permission</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>getRank</td>
+                            <td>Gets an employee's rank</td>
+                            <td>/inc getRank &lt;company&gt; &lt;employee&gt;</td>
+                            <td>gr</td>
+                            <td>MANAGEEMPLOYEES</td>
+                        </tr>
+                        <tr>
+                            <td>setRank</td>
+                            <td>Sets an employee's rank</td>
+                            <td>/inc setRank &lt;company&gt; &lt;employee&gt; &lt;rank&gt;</td>
+                            <td>sr</td>
+                            <td>MANAGEEMPLOYEES</td>
+                        </tr>
+                        <tr>
+                            <td>fire</td>
+                            <td>Fires an employee</td>
+                            <td>/inc fire &lt;company&gt; &lt;employee&gt;</td>
+                            <td>None</td>
+                            <td>FIRE</td>
+                        </tr>
+                        <tr>
+                            <td>resign</td>
+                            <td>Leaves a company</td>
+                            <td>/inc resign &lt;company&gt; &lt;console: player&gt;</td>
+                            <td>None</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td>employees</td>
+                            <td>Lists employees</td>
+                            <td>/inc employees &lt;company&gt;</td>
+                            <td>empl</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td>payEmployees</td>
+                            <td>Pays all employees</td>
+                            <td>/inc payEmployees &lt;company&gt;</td>
+                            <td>pe</td>
+                            <td>WITHDRAW, MANAGEEMPLOYEES</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr>
                 <h2>Money Commands</h2>
                 <table class="table table-hover">
                     <thead>
@@ -87,7 +265,7 @@
                     </tbody>
                 </table>
                 <hr>
-                <h2>Employee Commands</h2>
+                <h2>Console Commands</h2>
                 <table class="table table-hover">
                     <thead>
                         <tr>
@@ -100,46 +278,11 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>getRank</td>
-                            <td>Gets an employee's rank</td>
-                            <td>/inc getRank &lt;company&gt; &lt;employee&gt;</td>
-                            <td>gr</td>
-                            <td>MANAGEEMPLOYEES</td>
-                        </tr>
-                        <tr>
-                            <td>setRank</td>
-                            <td>Sets an employee's rank</td>
-                            <td>/inc setRank &lt;company&gt; &lt;employee&gt; &lt;rank&gt;</td>
-                            <td>sr</td>
-                            <td>MANAGEEMPLOYEES</td>
-                        </tr>
-                        <tr>
-                            <td>fire</td>
-                            <td>Fires an employee</td>
-                            <td>/inc fire &lt;company&gt; &lt;employee&gt;</td>
-                            <td>None</td>
-                            <td>FIRE</td>
-                        </tr>
-                        <tr>
-                            <td>resign</td>
-                            <td>Leaves a company</td>
-                            <td>/inc resign &lt;company&gt; &lt;console: player&gt;</td>
+                            <td>clean</td>
+                            <td>Cleans up the database<a href="#note2"><sup>2</sup></a></td>
+                            <td>/inc clean &lt;optional: y&gt;</td>
                             <td>None</td>
                             <td>None</td>
-                        </tr>
-                        <tr>
-                            <td>employees</td>
-                            <td>Lists employees</td>
-                            <td>/inc employees &lt;company&gt;</td>
-                            <td>empl</td>
-                            <td>None</td>
-                        </tr>
-                        <tr>
-                            <td>payEmployees</td>
-                            <td>Pays all employees</td>
-                            <td>/inc payEmployees &lt;company&gt;</td>
-                            <td>pe</td>
-                            <td>WITHDRAW, MANAGEEMPLOYEES</td>
                         </tr>
                     </tbody>
                 </table>
@@ -176,49 +319,6 @@
                             <td>/inc listPerms &lt;company&gt; &lt;rank&gt;</td>
                             <td>lp</td>
                             <td>None</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <hr>
-                <h2>General Commands</h2>
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Usage</th>
-                            <th>Alias</th>
-                            <th>Permission</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>list</td>
-                            <td>Lists all the companies currently in the game</td>
-                            <td>/inc list </td>
-                            <td>None</td>
-                            <td>None</td>
-                        </tr>
-                        <tr>
-                            <td>create</td>
-                            <td>Creates a new company</td>
-                            <td>/inc create &lt;company&gt; &lt;console: player&gt;</td>
-                            <td>None</td>
-                            <td>None</td>
-                        </tr>
-                        <tr>
-                            <td>delete</td>
-                            <td>Deletes a company</td>
-                            <td>/inc delete &lt;company&gt;</td>
-                            <td>None</td>
-                            <td>DELETE</td>
-                        </tr>
-                        <tr>
-                            <td>rename</td>
-                            <td>Renames a company</td>
-                            <td>/inc rename &lt;company&gt; &lt;newName&gt;</td>
-                            <td>None</td>
-                            <td>RENAME</td>
                         </tr>
                     </tbody>
                 </table>
@@ -284,89 +384,24 @@
                             <td>pi</td>
                             <td>None</td>
                         </tr>
-                    </tbody>
-                </table>
-                <hr>
-                <h2>Rank Commands</h2>
-                <table class="table table-hover">
-                    <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Usage</th>
-                            <th>Alias</th>
-                            <th>Permission</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>listRanks</td>
-                            <td>Lists the ranks in a company</td>
-                            <td>/inc listRanks &lt;company&gt;</td>
-                            <td>lr</td>
+                            <td>rsc</td>
+                            <td>Links a restock chest, which automatically puts all items in stock</td>
+                            <td>/inc rsc &lt;company&gt;</td>
+                            <td>None</td>
                             <td>None</td>
                         </tr>
                         <tr>
-                            <td>addRank</td>
-                            <td>Adds a rank to a company</td>
-                            <td>/inc addRank &lt;company&gt; &lt;rank&gt; &lt;wage&gt;</td>
-                            <td>ar</td>
-                            <td>MANAGERANKS</td>
-                        </tr>
-                        <tr>
-                            <td>removeRank</td>
-                            <td>Removes an existing rank from a company</td>
-                            <td>/inc removeRank &lt;company&gt; &lt;rank&gt;</td>
-                            <td>rr</td>
-                            <td>MANAGERANKS</td>
-                        </tr>
-                        <tr>
-                            <td>getWage</td>
-                            <td>Gets the wage of a rank</td>
-                            <td>/inc getWage &lt;company&gt; &lt;rank&gt;</td>
-                            <td>gw</td>
+                            <td>ulc</td>
+                            <td>Unlinks a chest</td>
+                            <td>/inc ulc &lt;company&gt;</td>
+                            <td>None</td>
                             <td>None</td>
                         </tr>
                         <tr>
-                            <td>setWage</td>
-                            <td>Sets the wage of a rank</td>
-                            <td>/inc setWage &lt;company&gt; &lt;rank&gt; &lt;wage&gt;</td>
-                            <td>sw</td>
-                            <td>MANAGERANKS</td>
-                        </tr>
-                        <tr>
-                            <td>getDRank</td>
-                            <td>Gets the default rank of a company<a href="#note1"><sup>1</sup></a></td>
-                            <td>/inc getDRank &lt;company&gt;</td>
-                            <td>gdr</td>
-                            <td>None</td>
-                        </tr>
-                        <tr>
-                            <td>setDRank</td>
-                            <td>Sets the default rank of a company</td>
-                            <td>/inc setDRank &lt;company&gt;</td>
-                            <td>sdr</td>
-                            <td>MANAGERANKS</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <hr>
-                <h2>Console Commands</h2>
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Usage</th>
-                            <th>Alias</th>
-                            <th>Permission</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>clean</td>
-                            <td>Cleans up the database<a href="#note2"><sup>2</sup></a></td>
-                            <td>/inc clean &lt;optional: y&gt;</td>
+                            <td>cancel</td>
+                            <td>Cancels a linking/unlinking operation</td>
+                            <td>/inc cancel &lt;company&gt;</td>
                             <td>None</td>
                             <td>None</td>
                         </tr>
@@ -377,4 +412,5 @@
             </div>
         </div>
     </body>
+</html>
 

@@ -39,6 +39,7 @@ public final class Incorporate extends JavaPlugin {
 			mongoClient = new MongoClient("localhost");
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
+			getServer().getPluginManager().disablePlugin(this);
 		}
         Morphia morphia = new Morphia();
         morphia.map(Company.class).map(Rank.class);
@@ -62,7 +63,12 @@ public final class Incorporate extends JavaPlugin {
         new ProcessLinkedChests(this).runTaskTimer(this, 10, 60);
         
         // Setup Commands
-        getCommand("inc").setExecutor(new UserCommandExecutor(this));
+        try {
+			getCommand("inc").setExecutor(new Executor(this));
+		} catch (Exception e) {
+			e.printStackTrace();
+			getServer().getPluginManager().disablePlugin(this);
+		}
 	}
 
     private boolean setupEconomy() {

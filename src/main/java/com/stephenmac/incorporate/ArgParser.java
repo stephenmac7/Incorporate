@@ -4,13 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class ArgParser {
 	public String action;
-	public String corporation = null;
-	public String senderName;
+	public String corp = null;
+	
+	public Player player = null;
+	public String playerName = null;
+	public boolean senderIsPlayer = false;
+	
 	public List<String> args = new ArrayList<String>();
 	
 	public ArgParser(CommandSender sender, String[] args, Map<String, String> selections){
@@ -20,27 +25,47 @@ public class ArgParser {
 				this.args.add(args[i]);
 			}
 			
-			if(sender instanceof Player)
-				senderName = ((Player) sender).getName();
-			else
-				senderName = "CONSOLE";
-			corporation = selections.get(senderName);
+			if(sender instanceof Player){
+				player = (Player) sender;
+				playerName = player.getName();
+				corp = selections.get(playerName);
+				senderIsPlayer = true;
+			}
 		}
 		else{
 			action = null;
 		}
 	}
 	
-	public String getCorp(){
-		if (corporation == null){
-			if (args.size() > 0){
-				corporation = args.get(0);
-				args.remove(0);
-			}
+	public boolean ensureCorp(){
+		if (corp == null){
+			if (args.size() > 0)
+				corp = args.remove(0);
+			else
+				return false;
+		}
+		return true;
+	}
+	
+	public boolean ensurePlayer(){
+		if (playerName == null){
+			if (args.size() > 0)
+				playerName = args.remove(0);
+			else
+				return false;
+		}
+		return true;
+	}
+	
+	public boolean ensurePlayerContext(Server s){
+		if (player == null){
+			if (playerName == null)
+				return false;
 			else{
-				return null;
+				player = s.getPlayer(playerName);
+				return player != null;
 			}
 		}
-		return corporation;
+		return true;
 	}
 }

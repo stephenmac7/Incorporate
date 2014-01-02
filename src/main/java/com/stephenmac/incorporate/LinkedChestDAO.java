@@ -1,6 +1,5 @@
 package com.stephenmac.incorporate;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.bson.types.ObjectId;
@@ -12,9 +11,9 @@ public class LinkedChestDAO extends BasicDAO<LinkedChest, ObjectId> {
 		super(ds);
 	}
 	
-	public List<LinkedChest> findByLoc(int x, int y, int z, UUID world){
-		return this.find(this.createQuery()
+	public LinkedChest findByLoc(int x, int y, int z, UUID world){
+		return this.findOne(this.createQuery()
 				.filter("x =", x).filter("y =", y).filter("z =", z)
-				.filter("world =", world)).asList();
+				.filter("world =", world));
 	}
 }

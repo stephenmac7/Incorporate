@@ -11,6 +11,7 @@ import org.mongodb.morphia.annotations.Reference;
 public class LinkedChest {
 	@Id private ObjectId id;
 	@Reference private Company corp;
+	private LinkType linkType;
 	private int x;
 	private int y;
 	private int z;
@@ -56,5 +57,11 @@ public class LinkedChest {
 	}
 	public void setWorld(UUID world) {
 		this.world = world;
+	}
+	public LinkType getLinkType() {
+		return linkType;
+	}
+	public void setLinkType(LinkType linkType) {
+		this.linkType = linkType;
 	}
 }

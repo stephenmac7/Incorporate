@@ -23,8 +23,8 @@
         },
         {
             "name": "select",
-            "desc": "Selects a company, allowing player to omit company argument"
-            "usage": "<company>",
+            "desc": "Selects a company, allowing player to omit company argument",
+            "usage": "<company>"
         },
         {
             "name": "deselect",

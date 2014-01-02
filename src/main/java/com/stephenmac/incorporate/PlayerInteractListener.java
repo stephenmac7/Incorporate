@@ -1,6 +1,5 @@
 package com.stephenmac.incorporate;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -38,7 +37,7 @@ public class PlayerInteractListener implements Listener {
 				String result;
 				switch(action.action){
 				case "linkChest":
-					result = linkChest(action.corporation, x, y, z, world);
+					result = linkChest(action.corporation, ((LinkType) action.spec), x, y, z, world);
 					break;
 				case "unlinkChest":
 					result = unlinkChest(x, y, z, world);
@@ -53,27 +52,28 @@ public class PlayerInteractListener implements Listener {
 			}
 		}
 	}
-		
-	private String linkChest(Company corp, int x, int y, int z, UUID world){
+	
+	private String linkChest(Company corp, LinkType lt, int x, int y, int z, UUID world){
 		// Make sure it's not already linked
-		if (lcDAO.findByLoc(x, y, z, world).isEmpty()){
+		if (lcDAO.findByLoc(x, y, z, world) == null){
 			LinkedChest c = new LinkedChest();
 			c.setLoc(x, y, z);
 			c.setWorld(world);
 			c.setCorp(corp);
+			c.setLinkType(lt);
 			lcDAO.save(c);
 			
-			return "Chest now linked as a restock chest";
+			return "Now linked as a restock chest";
 		}
 		return "Already linked";
 	}
 	private String unlinkChest(int x, int y, int z, UUID world){
-		List<LinkedChest> lChests = lcDAO.findByLoc(x, y, z, world);
-		if (lChests.isEmpty())
+		LinkedChest lChest = lcDAO.findByLoc(x, y, z, world);
+		if (lChest == null)
 			return "Chest not linked";
 		else{
-			lcDAO.delete(lChests.get(0));
-			return "Unlinked";
+			lcDAO.delete(lChest);
+			return "Chest unlinked";
 		}
 	}
 }

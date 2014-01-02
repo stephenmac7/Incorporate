@@ -8,4 +8,8 @@ public class CompanyDAO extends BasicDAO<Company, ObjectId> {
 	public CompanyDAO(Datastore ds){
 		super(ds);
 	}
+	
+	public Company findByName(String name){
+		return this.findOne("name", name);
+	}
 }
