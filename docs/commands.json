@@ -24,11 +24,12 @@
         {
             "name": "select",
             "desc": "Selects a company, allowing player to omit company argument",
-            "usage": "<company>"
+            "usage": "<company> <console: player>"
         },
         {
             "name": "deselect",
-            "desc": "Deselects a company"
+            "desc": "Deselects a company",
+            "usage": "<console: player>"
         }
     ],
     "Rank": [
@@ -36,7 +37,8 @@
             "name": "listRanks",
             "desc": "Lists the ranks in a company",
             "usage": "<company>",
-            "alias": "lr"
+            "alias": "lr",
+            "permission": ["BASIC"]
         },
         {
             "name": "addRank",
@@ -56,7 +58,8 @@
             "name": "getWage",
             "desc": "Gets the wage of a rank",
             "usage": "<company> <rank>",
-            "alias": "gw"
+            "alias": "gw",
+            "permission": ["BASIC"]
         },
         {
             "name": "setWage",
@@ -98,7 +101,8 @@
             "name": "listPerms",
             "desc": "Lists a rank's permissions",
             "usage": "<company> <rank>",
-            "alias": "lp"
+            "alias": "lp",
+            "permission": ["BASIC"]
         }
     ],
     "Employee": [
@@ -193,12 +197,12 @@
         {
             "name": "restock",
             "desc": "Adds product(s) to stock",
-            "usage": "<company>"
+            "usage": "<company> <console: player>"
         },
         {
             "name": "recall",
             "desc": "Removes products(s) from stock",
-            "usage": "<company> <itemNumber> <quantity>",
+            "usage": "<company> <console: player> <itemNumber> <quantity>",
             "permission": ["RECALL"]
         },
         {
@@ -210,12 +214,12 @@
         {
             "name": "buy",
             "desc": "Buys an item",
-            "usage": "<company> <itemNumber> <quantity>"
+            "usage": "<company> <console: player> <itemNumber> <quantity>"
         },
         {
             "name": "sell",
             "desc": "Sells an item",
-            "usage": "<company>"
+            "usage": "<company> <console: player>"
         },
         {
             "name": "browse",
@@ -230,19 +234,20 @@
             "alias": "pi"
         },
         {
-            "name": "rsc",
-            "desc": "Links a restock chest, which automatically puts all items in stock",
-            "usage": "<company>"
+            "name": "link",
+            "desc": "Links a chest<a href=\"#note3\"><sup>3</sup></a>",
+            "usage": "<company> <console: player> <linkType> <buy/sell: targetCorp> <recall/buy: item> <recall/buy: amount>",
+            "permission": ["BASIC"]
         },
         {
-            "name": "ulc",
-            "desc": "Unlinks a chest",
-            "usage": "<company>"
+            "name": "unlink",
+            "desc": "Uninks a chest",
+            "usage": "<console: player>"
         },
         {
             "name": "cancel",
             "desc": "Cancels a linking/unlinking operation",
-            "usage": "<company>"
+            "usage": "<console: player>"
         }
     ],
     "Console": [

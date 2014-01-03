@@ -34,7 +34,8 @@
                 </table>
             % endfor
                 <small><sup id="note1">1</sup>The default rank is the rank of new employees and of employees whose rank has been removed.</small><br>
-                <small><sup id="note2">2</sup>Adding a 'y' argument makes the cleanup more aggressive</small>
+                <small><sup id="note2">2</sup>Adding a 'y' argument makes the cleanup more aggressive</small><br>
+                <small><sup id="note3">3</sup>More information about linking chests coming soon</small>
             </div>
         </div>
     </body>

@@ -25,7 +25,7 @@
                             <td>Lists the ranks in a company</td>
                             <td>/inc listRanks &lt;company&gt;</td>
                             <td>lr</td>
-                            <td>None</td>
+                            <td>BASIC</td>
                         </tr>
                         <tr>
                             <td>addRank</td>
@@ -46,7 +46,7 @@
                             <td>Gets the wage of a rank</td>
                             <td>/inc getWage &lt;company&gt; &lt;rank&gt;</td>
                             <td>gw</td>
-                            <td>None</td>
+                            <td>BASIC</td>
                         </tr>
                         <tr>
                             <td>setWage</td>
@@ -115,16 +115,144 @@
                         <tr>
                             <td>select</td>
                             <td>Selects a company, allowing player to omit company argument</td>
-                            <td>/inc select &lt;company&gt;</td>
+                            <td>/inc select &lt;company&gt; &lt;console: player&gt;</td>
                             <td>None</td>
                             <td>None</td>
                         </tr>
                         <tr>
                             <td>deselect</td>
                             <td>Deselects a company</td>
-                            <td>/inc deselect </td>
+                            <td>/inc deselect &lt;console: player&gt;</td>
                             <td>None</td>
                             <td>None</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr>
+                <h2>Product Commands</h2>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Usage</th>
+                            <th>Alias</th>
+                            <th>Permission</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>restock</td>
+                            <td>Adds product(s) to stock</td>
+                            <td>/inc restock &lt;company&gt; &lt;console: player&gt;</td>
+                            <td>None</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td>recall</td>
+                            <td>Removes products(s) from stock</td>
+                            <td>/inc recall &lt;company&gt; &lt;console: player&gt; &lt;itemNumber&gt; &lt;quantity&gt;</td>
+                            <td>None</td>
+                            <td>RECALL</td>
+                        </tr>
+                        <tr>
+                            <td>price</td>
+                            <td>Sets price a product can be bought/sold for</td>
+                            <td>/inc price &lt;company&gt; &lt;itemNumber&gt; buy/sell &lt;price&gt;</td>
+                            <td>None</td>
+                            <td>SETPRICE</td>
+                        </tr>
+                        <tr>
+                            <td>buy</td>
+                            <td>Buys an item</td>
+                            <td>/inc buy &lt;company&gt; &lt;console: player&gt; &lt;itemNumber&gt; &lt;quantity&gt;</td>
+                            <td>None</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td>sell</td>
+                            <td>Sells an item</td>
+                            <td>/inc sell &lt;company&gt; &lt;console: player&gt;</td>
+                            <td>None</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td>browse</td>
+                            <td>Lists a company's products</td>
+                            <td>/inc browse &lt;company&gt;</td>
+                            <td>br</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td>productInfo</td>
+                            <td>Displays information about the product, including the item number and the price</td>
+                            <td>/inc productInfo &lt;company&gt; &lt;itemNumber&gt;</td>
+                            <td>pi</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td>link</td>
+                            <td>Links a chest<a href="#note3"><sup>3</sup></a></td>
+                            <td>/inc link &lt;company&gt; &lt;console: player&gt; &lt;linkType&gt; &lt;buy/sell: targetCorp&gt; &lt;recall/buy: item&gt; &lt;recall/buy: amount&gt;</td>
+                            <td>None</td>
+                            <td>BASIC</td>
+                        </tr>
+                        <tr>
+                            <td>unlink</td>
+                            <td>Uninks a chest</td>
+                            <td>/inc unlink &lt;console: player&gt;</td>
+                            <td>None</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td>cancel</td>
+                            <td>Cancels a linking/unlinking operation</td>
+                            <td>/inc cancel &lt;console: player&gt;</td>
+                            <td>None</td>
+                            <td>None</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr>
+                <h2>Applicant Commands</h2>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Usage</th>
+                            <th>Alias</th>
+                            <th>Permission</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>apply</td>
+                            <td>Applies to a company</td>
+                            <td>/inc apply &lt;company&gt; &lt;console: player&gt;</td>
+                            <td>None</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td>reject</td>
+                            <td>Rejects an applicant</td>
+                            <td>/inc reject &lt;company&gt; &lt;applicant&gt;</td>
+                            <td>None</td>
+                            <td>HIRE</td>
+                        </tr>
+                        <tr>
+                            <td>hire</td>
+                            <td>Hires an applicant</td>
+                            <td>/inc hire &lt;company&gt; &lt;applicant&gt;</td>
+                            <td>None</td>
+                            <td>HIRE</td>
+                        </tr>
+                        <tr>
+                            <td>applicants</td>
+                            <td>Lists applicants</td>
+                            <td>/inc applicants &lt;company&gt;</td>
+                            <td>appl</td>
+                            <td>HIRE</td>
                         </tr>
                     </tbody>
                 </table>
@@ -222,49 +350,6 @@
                     </tbody>
                 </table>
                 <hr>
-                <h2>Applicant Commands</h2>
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Usage</th>
-                            <th>Alias</th>
-                            <th>Permission</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>apply</td>
-                            <td>Applies to a company</td>
-                            <td>/inc apply &lt;company&gt; &lt;console: player&gt;</td>
-                            <td>None</td>
-                            <td>None</td>
-                        </tr>
-                        <tr>
-                            <td>reject</td>
-                            <td>Rejects an applicant</td>
-                            <td>/inc reject &lt;company&gt; &lt;applicant&gt;</td>
-                            <td>None</td>
-                            <td>HIRE</td>
-                        </tr>
-                        <tr>
-                            <td>hire</td>
-                            <td>Hires an applicant</td>
-                            <td>/inc hire &lt;company&gt; &lt;applicant&gt;</td>
-                            <td>None</td>
-                            <td>HIRE</td>
-                        </tr>
-                        <tr>
-                            <td>applicants</td>
-                            <td>Lists applicants</td>
-                            <td>/inc applicants &lt;company&gt;</td>
-                            <td>appl</td>
-                            <td>HIRE</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <hr>
                 <h2>Console Commands</h2>
                 <table class="table table-hover">
                     <thead>
@@ -318,97 +403,13 @@
                             <td>Lists a rank's permissions</td>
                             <td>/inc listPerms &lt;company&gt; &lt;rank&gt;</td>
                             <td>lp</td>
-                            <td>None</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <hr>
-                <h2>Product Commands</h2>
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Usage</th>
-                            <th>Alias</th>
-                            <th>Permission</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>restock</td>
-                            <td>Adds product(s) to stock</td>
-                            <td>/inc restock &lt;company&gt;</td>
-                            <td>None</td>
-                            <td>None</td>
-                        </tr>
-                        <tr>
-                            <td>recall</td>
-                            <td>Removes products(s) from stock</td>
-                            <td>/inc recall &lt;company&gt; &lt;itemNumber&gt; &lt;quantity&gt;</td>
-                            <td>None</td>
-                            <td>RECALL</td>
-                        </tr>
-                        <tr>
-                            <td>price</td>
-                            <td>Sets price a product can be bought/sold for</td>
-                            <td>/inc price &lt;company&gt; &lt;itemNumber&gt; buy/sell &lt;price&gt;</td>
-                            <td>None</td>
-                            <td>SETPRICE</td>
-                        </tr>
-                        <tr>
-                            <td>buy</td>
-                            <td>Buys an item</td>
-                            <td>/inc buy &lt;company&gt; &lt;itemNumber&gt; &lt;quantity&gt;</td>
-                            <td>None</td>
-                            <td>None</td>
-                        </tr>
-                        <tr>
-                            <td>sell</td>
-                            <td>Sells an item</td>
-                            <td>/inc sell &lt;company&gt;</td>
-                            <td>None</td>
-                            <td>None</td>
-                        </tr>
-                        <tr>
-                            <td>browse</td>
-                            <td>Lists a company's products</td>
-                            <td>/inc browse &lt;company&gt;</td>
-                            <td>br</td>
-                            <td>None</td>
-                        </tr>
-                        <tr>
-                            <td>productInfo</td>
-                            <td>Displays information about the product, including the item number and the price</td>
-                            <td>/inc productInfo &lt;company&gt; &lt;itemNumber&gt;</td>
-                            <td>pi</td>
-                            <td>None</td>
-                        </tr>
-                        <tr>
-                            <td>rsc</td>
-                            <td>Links a restock chest, which automatically puts all items in stock</td>
-                            <td>/inc rsc &lt;company&gt;</td>
-                            <td>None</td>
-                            <td>None</td>
-                        </tr>
-                        <tr>
-                            <td>ulc</td>
-                            <td>Unlinks a chest</td>
-                            <td>/inc ulc &lt;company&gt;</td>
-                            <td>None</td>
-                            <td>None</td>
-                        </tr>
-                        <tr>
-                            <td>cancel</td>
-                            <td>Cancels a linking/unlinking operation</td>
-                            <td>/inc cancel &lt;company&gt;</td>
-                            <td>None</td>
-                            <td>None</td>
+                            <td>BASIC</td>
                         </tr>
                     </tbody>
                 </table>
                 <small><sup id="note1">1</sup>The default rank is the rank of new employees and of employees whose rank has been removed.</small><br>
-                <small><sup id="note2">2</sup>Adding a 'y' argument makes the cleanup more aggressive</small>
+                <small><sup id="note2">2</sup>Adding a 'y' argument makes the cleanup more aggressive</small><br>
+                <small><sup id="note3">3</sup>More information about linking chests coming soon</small>
             </div>
         </div>
     </body>

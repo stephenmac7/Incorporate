@@ -7,7 +7,7 @@ import com.stephenmac.incorporate.Permission;
 import com.stephenmac.incorporate.Product;
 
 public class SetPriceCommand extends Command {
-	
+
 	public SetPriceCommand(ArgParser p, Executor cmdExec) {
 		super(p, cmdExec);
 		usage = "<item> <buy/sell> <price>";
@@ -19,13 +19,13 @@ public class SetPriceCommand extends Command {
 		String item = p.args.get(0);
 		String buySell = p.args.get(1);
 		String price = p.args.get(2);
-		
+
 		Double pPrice = price.equals("null") ? null : Double.parseDouble(price);
-		if (pPrice > 0){
+		if (pPrice >= 0) {
 			Item parsed = parseItem(item);
 			Product p = corp.getProduct(parsed, true);
-			
-			switch(buySell.toLowerCase()){
+
+			switch (buySell.toLowerCase()) {
 			case "buy":
 				p.setBuyPrice(pPrice);
 				break;
@@ -35,16 +35,15 @@ public class SetPriceCommand extends Command {
 			default:
 				return "You did not specify buy or sell";
 			}
-			if (p.getBuyPrice() == null && p.getSellPrice() == null && p.getQuantity() == 0){
+			if (p.getBuyPrice() == null && p.getSellPrice() == null
+			        && p.getQuantity() == 0) {
 				corp.removeProduct(p);
 				return item + " removed from " + corp.getName() + "'s books.";
-			}
-			else{
+			} else {
 				return "Price of " + item + " set to " + price;
 			}
-		}
-		else{
-			return "Cannot have negative price or no charge";
+		} else {
+			return "Cannot have negative price";
 		}
 	}
 

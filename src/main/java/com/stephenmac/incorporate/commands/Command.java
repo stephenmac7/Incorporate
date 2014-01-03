@@ -3,6 +3,8 @@ package com.stephenmac.incorporate.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Material;
+
 import com.stephenmac.incorporate.ArgParser;
 import com.stephenmac.incorporate.Company;
 import com.stephenmac.incorporate.Executor;
@@ -11,114 +13,126 @@ import com.stephenmac.incorporate.Permission;
 
 public abstract class Command {
 	// Info Variables
-	/// Number of arguments required
-	protected int nArgs = -1;
-	/// Help Text
+	// / Help Text
 	protected String usage = null;
-	/// Permissions required
+	// / Permissions required
 	protected List<Permission> perms = new ArrayList<Permission>();
-	
-	/// Requires a corporation?
+
+	// / Requires a corporation?
 	protected boolean needsCorp = true;
-	//// If so, must it be valid?
+	// // If so, must it be valid?
 	protected boolean validCorp = true;
-	/// Requires a player name?
+	// / Requires a player name?
 	protected boolean needsPlayer = false;
-	
+
 	// Runtime Variables
-	/// Parsed arguments
+	// / Parsed arguments
 	protected ArgParser p;
-	/// Executor
+	// / Executor
 	protected Executor cmdExec;
-	/// Company, if needed
+	// / Company, if needed
 	protected Company corp = null;
 
 	// Methods
-	/// Basic
-	public Command(ArgParser p, Executor cmdExec){
+	// / Basic
+	public Command(ArgParser p, Executor cmdExec) {
 		this.p = p;
 		this.cmdExec = cmdExec;
 	}
-	
+
 	public abstract String execute();
-	
-	public boolean validate(){
-		return (needsCorp ? (p.ensureCorp() && (validCorp ? getCompany() != null : true)) : true)
-				&& (needsPlayer ? p.ensurePlayer() : true)
-				&& p.args.size() == getNArgs();
-	}
-	
-	private int getNArgs() {
-		if (nArgs != -1)
-			return nArgs;
-		else{
-			if (usage == null)
-				return 0;
-			else
-				return usage.split(" ").length;
-		}
+
+	public boolean validate() {
+		return (needsCorp ? (p.ensureCorp() && (validCorp ? getCompany() != null
+		        : true))
+		        : true)
+		        && (needsPlayer ? p.ensurePlayer() : true)
+		        && p.args.size() == getNArgs();
 	}
 
-	public void cleanup(){
+	private int getNArgs() {
+		if (usage == null)
+			return 0;
+		else
+			return usage.split(" ").length;
+	}
+
+	public void cleanup() {
 		if (corp != null)
 			cmdExec.companyDAO.save(corp);
 	};
-	
-	/// Messages
-	public String usageMessage(){
+
+	// / Messages
+	public String usageMessage() {
 		StringBuilder s = new StringBuilder();
 		s.append("/inc " + p.action);
-		if (needsCorp)
+		if (needsCorp && !p.corpSelected)
 			s.append(" <company>");
-		if (needsPlayer)
-			s.append(" <console: player>");
+		if (needsPlayer && !p.senderIsPlayer)
+			s.append(" <player>");
 		if (usage != null)
 			s.append(" " + usage);
 		return s.toString();
 	}
-	
-	public String notEmployeeMessage(String employee){
+
+	public String notEmployeeMessage(String employee) {
 		return employee + " is not an employee of " + getCompany().getName();
 	}
-	
-	public String permissionMessage(){
+
+	public String permissionMessage() {
 		StringBuilder r = new StringBuilder();
 		r.append("To run this command, you must have the corporate permissions:");
-		for (Permission p : perms){
+		for (Permission p : perms) {
 			r.append("\n- " + p.toString());
 		}
 		return r.toString();
 	}
-	
-	/// Company helper functions
-	protected Company getCompany(){
+
+	// / Company helper functions
+	protected Company getCompany() {
 		if (corp == null)
 			corp = cmdExec.companyDAO.findByName(p.corp);
 		return corp;
 	}
-	
-	public boolean checkPermission(){
-		return (!perms.isEmpty() && p.senderIsPlayer) ? p.player.hasPermission("inc.admin") || allPerms() : true;
+
+	public boolean checkPermission() {
+		return (!perms.isEmpty() && p.senderIsPlayer) ? p.player
+		        .hasPermission("inc.admin") || allPerms() : true;
 	}
-	
-	protected boolean allPerms(){
-		for (Permission perm : perms){
+
+	protected boolean checkPermission(Permission perm) {
+		return p.senderIsPlayer ? p.player.hasPermission("inc.admin")
+		        || corp.hasPerm(p.playerName, perm) : true;
+	}
+
+	protected boolean allPerms() {
+		for (Permission perm : perms) {
 			if (!corp.hasPerm(p.playerName, perm))
 				return false;
 		}
 		return true;
 	}
-	
-	protected Item parseItem(String item){
+
+	protected Item parseItem(String item) {
 		Item i = new Item();
-		if (item.contains(":")){
+		if (item.contains(":")) {
 			String[] itemArgs = item.split(":");
-			i.setId(Integer.parseInt(itemArgs[0]));
+
+			i.setId(parseMaterial(itemArgs[0]));
 			i.setData(Byte.parseByte(itemArgs[1]));
-		}
-		else{
-			i.setId(Integer.parseInt(item));
+		} else {
+			i.setId(parseMaterial(item));
 		}
 		return i;
+	}
+
+	@SuppressWarnings("deprecation")
+	protected int parseMaterial(String item) {
+		try {
+			Material mat = Material.valueOf(item.toUpperCase());
+			return mat.getId();
+		} catch (IllegalArgumentException e) {
+			return Integer.parseInt(item);
+		}
 	}
 }
