@@ -28,8 +28,10 @@ public class PlayerInteractListener implements Listener {
 				ExpectingLocation action = eLActions.get(player.getName());
 				if (action.checkBlock(block)) {
 					action.setPlugin(plugin);
-					player.sendMessage(action.useLocation(block.getWorld()
-					        .getUID(), block.getX(), block.getY(), block.getZ()));
+
+					SimpleLocation blockLoc = new SimpleLocation();
+					blockLoc.fromLocation(block.getLocation());
+					player.sendMessage(action.useLocation(blockLoc));
 
 					eLActions.remove(player.getName());
 				}

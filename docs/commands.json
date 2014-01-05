@@ -235,7 +235,7 @@
         },
         {
             "name": "link",
-            "desc": "Links a chest<a href=\"#note3\"><sup>3</sup></a>",
+            "desc": "<a href=\"http://dev.bukkit.org/bukkit-plugins/incorporate/pages/linked-chests/\">Links</a> a chest",
             "usage": "<company> <console: player> <linkType> <buy/sell: targetCorp> <recall/buy: item> <recall/buy: amount>",
             "permission": ["BASIC"]
         },

@@ -1,7 +1,5 @@
 package com.stephenmac.incorporate;
 
-import java.util.UUID;
-
 import org.bukkit.block.Block;
 import org.bukkit.inventory.InventoryHolder;
 
@@ -10,11 +8,10 @@ public class ChestLinker implements ExpectingLocation {
 	protected LinkedChest c;
 
 	@Override
-	public String useLocation(UUID world, int x, int y, int z) {
+	public String useLocation(SimpleLocation loc) {
 		// Make sure it's not already linked
-		if (lcDAO.findByLoc(x, y, z, world) == null) {
-			c.setLoc(x, y, z);
-			c.setWorld(world);
+		if (lcDAO.findByLoc(loc) == null) {
+			c.setLoc(loc);
 			lcDAO.save(c);
 
 			return "Chest linked";

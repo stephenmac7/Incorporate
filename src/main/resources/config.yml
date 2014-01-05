@@ -1,0 +1,2 @@
+# The name of the targeted mongo database
+database: "incorporate"

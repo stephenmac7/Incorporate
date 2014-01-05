@@ -29,13 +29,14 @@ public final class Incorporate extends JavaPlugin {
 	public void onEnable() {
 		// Setup Economy, fail load if no vault
 		if (!setupEconomy()) {
-			getLogger()
-			        .severe(String
-			                .format("[%s] - Disabled due to no Vault dependency found!",
-			                        getDescription().getName()));
+			getLogger().severe(
+			        String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
+
+		// Setup config
+		this.saveDefaultConfig();
 
 		// Setup db
 		MongoClient mongoClient = null;
@@ -45,20 +46,7 @@ public final class Incorporate extends JavaPlugin {
 			e.printStackTrace();
 			getServer().getPluginManager().disablePlugin(this);
 		}
-		Morphia morphia = new Morphia();
-		morphia.map(Company.class).map(Rank.class);
-
-		// Setup datastore
-		MapperOptions opts = new MapperOptions();
-		opts.objectFactory = new CustomCreator(this.getClassLoader());
-		Mapper mapper = new Mapper(opts);
-		Datastore ds = new DatastoreImpl(mapper, mongoClient, "incorporate");
-
-		// Setup DAOs
-		companyDAO = new CompanyDAO(ds);
-		companyDAO.ensureIndexes();
-		linkedChestDAO = new LinkedChestDAO(ds);
-		linkedChestDAO.ensureIndexes();
+		setupDatabase(mongoClient);
 
 		// Setup Listeners
 		new PlayerInteractListener(this);
@@ -75,12 +63,29 @@ public final class Incorporate extends JavaPlugin {
 		}
 	}
 
+	private void setupDatabase(MongoClient mongoCl) {
+		// Initialize Morphia
+		Morphia morphia = new Morphia();
+		morphia.map(Company.class).map(LinkedChest.class);
+
+		// Setup datastore
+		MapperOptions opts = new MapperOptions();
+		opts.objectFactory = new CustomCreator(this.getClassLoader());
+		Mapper mapper = new Mapper(opts);
+		Datastore ds = new DatastoreImpl(mapper, mongoCl, this.getConfig().getString("database"));
+
+		// Setup DAOs
+		companyDAO = new CompanyDAO(ds);
+		companyDAO.ensureIndexes();
+		linkedChestDAO = new LinkedChestDAO(ds);
+		linkedChestDAO.ensureIndexes();
+	}
+
 	private boolean setupEconomy() {
 		if (getServer().getPluginManager().getPlugin("Vault") == null) {
 			return false;
 		}
-		RegisteredServiceProvider<Economy> rsp = getServer()
-		        .getServicesManager().getRegistration(Economy.class);
+		RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
 		if (rsp == null) {
 			return false;
 		}

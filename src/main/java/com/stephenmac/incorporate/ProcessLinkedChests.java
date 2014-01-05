@@ -22,12 +22,10 @@ public class ProcessLinkedChests extends BukkitRunnable {
 		List<LinkedChest> lChests = plugin.linkedChestDAO.find().asList();
 		curAmount = -1;
 		for (LinkedChest lChest : lChests) {
-			Block block = plugin.getServer().getWorld(lChest.getWorld())
-			        .getBlockAt(lChest.getX(), lChest.getY(), lChest.getZ());
+			Block block = lChest.getLoc().toLocation(plugin.getServer()).getBlock();
 
 			if (block.getState() instanceof InventoryHolder) {
-				Inventory inv = ((InventoryHolder) block.getState())
-				        .getInventory();
+				Inventory inv = ((InventoryHolder) block.getState()).getInventory();
 				if (lChest.getLinkType() == LinkType.RESTOCK)
 					processRestockChest(lChest, inv);
 				else if (lChest.getLinkType() == LinkType.RECALL)
@@ -51,8 +49,7 @@ public class ProcessLinkedChests extends BukkitRunnable {
 				Item item = new Item();
 				item.fromStack(stack);
 
-				c.getCorp().getProduct(item, true)
-				        .adjustQuantity(stack.getAmount());
+				c.getCorp().getProduct(item, true).adjustQuantity(stack.getAmount());
 			}
 		}
 		inv.clear();
@@ -64,8 +61,7 @@ public class ProcessLinkedChests extends BukkitRunnable {
 			int amount = getTotalAmount(p, c.getAmount(), inv);
 			int added = amount - getCurAmount(inv, p.getItem());
 			if (added > 0) {
-				System.out.println(String.format("Amount: %d Added: %d",
-				        amount, added));
+				System.out.println(String.format("Amount: %d Added: %d", amount, added));
 				fillInventory(inv, p.getItem(), amount);
 				p.adjustQuantity(-added);
 			}
@@ -79,8 +75,7 @@ public class ProcessLinkedChests extends BukkitRunnable {
 			int bought = amount - getCurAmount(inv, p.getItem());
 
 			double totalPrice = p.getBuyPrice() * bought;
-			if (bought > 0
-			        && c.getOwner().canHandleTransfer(c.getCorp(), totalPrice)) {
+			if (bought > 0 && c.getOwner().canHandleTransfer(c.getCorp(), totalPrice)) {
 				fillInventory(inv, p.getItem(), amount);
 				c.getOwner().transferMoney(c.getCorp(), totalPrice);
 				p.adjustQuantity(-bought);
@@ -101,8 +96,7 @@ public class ProcessLinkedChests extends BukkitRunnable {
 					double totalPrice = stack.getAmount() * p.getSellPrice();
 					if (c.getCorp().canHandleTransfer(c.getOwner(), totalPrice)) {
 						c.getCorp().transferMoney(c.getOwner(), totalPrice);
-						c.getCorp().getProduct(item, true)
-						        .adjustQuantity(stack.getAmount());
+						c.getCorp().getProduct(item, true).adjustQuantity(stack.getAmount());
 						stack = null;
 					}
 				}
@@ -152,7 +146,6 @@ public class ProcessLinkedChests extends BukkitRunnable {
 	// Creates an itemstack for the given item.
 	@SuppressWarnings("deprecation")
 	public ItemStack makeStack(Item item, int amount) {
-		return amount == 0 ? null : new ItemStack(item.getId(), amount,
-		        (short) 0, item.getData());
+		return amount == 0 ? null : new ItemStack(item.getId(), amount, (short) 0, item.getData());
 	}
 }
