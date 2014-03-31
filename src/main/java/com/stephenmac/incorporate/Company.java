@@ -21,11 +21,11 @@ public class Company {
 	private double balance = 0;
 	private String defaultRank = "Owner";
 
-	private List<Rank> ranks = new ArrayList<Rank>();
-	private List<Product> products = new ArrayList<Product>();
+	private List<Rank> ranks = new ArrayList<>();
+	private List<Product> products = new ArrayList<>();
 
-	private Set<String> applicants = new HashSet<String>();
-	private Map<String, String> employees = new HashMap<String, String>();
+	private Set<String> applicants = new HashSet<>();
+	private Map<String, String> employees = new HashMap<>();
 
 	public Company() {
 		Rank owner = new Rank();
@@ -69,11 +69,7 @@ public class Company {
 
 	// Misc Methods
 	public boolean hasPerm(String employee, Permission perm) {
-		if (isEmployee(employee)) {
-			return getEmployeeRank(employee).permissions.contains(perm);
-		} else {
-			return false;
-		}
+        return isEmployee(employee) && getEmployeeRank(employee).permissions.contains(perm);
 	}
 
 	// Rank Management
@@ -129,11 +125,8 @@ public class Company {
 	// * Permissions
 	public boolean grantPermission(String name, Permission p) {
 		Rank r = getRank(name);
-		if (r != null) {
-			return r.permissions.add(p);
-		}
-		return false;
-	}
+        return r != null && r.permissions.add(p);
+    }
 
 	public boolean revokePermission(String name, Permission p) {
 		Rank r = getRank(name);
@@ -162,7 +155,7 @@ public class Company {
 	}
 
 	public Map<String, Rank> getEmployees() {
-		Map<String, Rank> r = new HashMap<String, Rank>();
+		Map<String, Rank> r = new HashMap<>();
 		for (String employee : employees.keySet()) {
 			r.put(employee, getEmployeeRank(employee));
 		}
@@ -201,11 +194,8 @@ public class Company {
 	}
 
 	public boolean addApplicant(String name) {
-		if (!isEmployee(name)) {
-			return applicants.add(name);
-		}
-		return false;
-	}
+        return !isEmployee(name) && applicants.add(name);
+    }
 
 	public boolean removeApplicant(String name) {
 		return applicants.remove(name);

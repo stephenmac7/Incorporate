@@ -17,13 +17,12 @@ public class WithdrawCommand extends Command {
 
 	@Override
 	public String execute() {
-		String amount = p.args.get(0);
-		double pAmount = Double.parseDouble(amount);
+		double pAmount = toAmount(p.args.get(0));
 		if (pAmount > 0 && corp.getBalance() >= pAmount){
 			EconomyResponse r = cmdExec.econ.depositPlayer(p.playerName, pAmount);
 			if (r.transactionSuccess()){
 				corp.adjustBalance(-pAmount);
-				return "Successfully withdrew " + amount + " from " + corp.getName();
+				return "Successfully withdrew " + cmdExec.econ.format(pAmount) + " from " + corp.getName();
 			}
 			else
 				return r.errorMessage;

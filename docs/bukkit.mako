@@ -11,13 +11,16 @@
 </ul>
 
 <h1>Installation</h1>
-You can either download a <a href="http://dev.bukkit.org/bukkit-plugins/incorporate/files/">released version</a> or a <a href="https://stephenmac7.ci.cloudbees.com/job/Incorporate/">development build</a>. To use this plugin you'll need:
+<p>Development builds of this project can be acquired at the provided continuous integration server. 
+These builds have not been approved by the BukkitDev staff. Use them at your own risk.</p>
+
+<p>You can either download a <a href="http://dev.bukkit.org/bukkit-plugins/incorporate/files/">released version</a> or a <a href="https://stephenmac7.ci.cloudbees.com/job/Incorporate/">development build</a>. To use this plugin you'll need:</p>
 <ul>
     <li>MongoDB</li>
     <li>Vault</li>
     <li><a href="http://mml.stephenmac.com/static/archives/libs.zip">These libraries</a></li>
 </ul>
-Start your Mongo server, unzip those libraries into lib/ (create it if you have not done so yet), setup your economy plugin, and you'll be ready to have an intricate economy!
+<p>Start your Mongo server, unzip those libraries into lib/ (create it if you have not done so yet), setup your economy plugin, and you'll be ready to have an intricate economy!</p>
 
 <h1>Commands</h1>
 % for category, commands in data.items():
@@ -55,7 +58,8 @@ Information about the configuration file can be found in the file itself.
 These are things that I may add, although not necessarily in the near future.
 <ul>
     <li>Semi-Realistic Stock Market</li>
-    <li>Taxes (probably not a good idea)</li>
     <li>Optional Automatic Pricing (Using the laws of supply and demand)</li>
     <li>Alerts (New applicant, Price change, You've been fired, etc)</li>
+    <li>Taxes (probably not a good idea)</li>
+    <li>Using strings instead of IDs, probably by the 1.7.4 release</li>
 </ul>

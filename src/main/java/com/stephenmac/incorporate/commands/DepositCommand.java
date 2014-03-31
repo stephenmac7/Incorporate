@@ -15,13 +15,12 @@ public class DepositCommand extends Command {
 
 	@Override
 	public String execute() {
-		String amount = p.args.get(0);
-		double pAmount = Double.parseDouble(amount);
+		double pAmount = toAmount(p.args.get(0));
 		if (pAmount > 0){
 			EconomyResponse r = cmdExec.econ.withdrawPlayer(p.playerName, pAmount);
 			if (r.transactionSuccess()){
 				corp.adjustBalance(pAmount);
-				return "Successfully deposited " + amount + " into " + corp.getName();
+				return "Successfully deposited " + cmdExec.econ.format(pAmount) + " into " + corp.getName();
 			}
 			else
 				return r.errorMessage;

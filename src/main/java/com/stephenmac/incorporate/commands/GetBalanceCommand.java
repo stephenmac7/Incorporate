@@ -13,7 +13,7 @@ public class GetBalanceCommand extends Command {
 
 	@Override
 	public String execute() {
-		return corp.getName() + "'s balance is: " + corp.getBalance();
+		return corp.getName() + "'s balance is: " + cmdExec.econ.format(corp.getBalance());
 	}
 
 }

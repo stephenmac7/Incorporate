@@ -15,6 +15,7 @@ import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.mapping.MapperOptions;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 
 public final class Incorporate extends JavaPlugin {
 	public Economy econ = null;
@@ -23,7 +24,7 @@ public final class Incorporate extends JavaPlugin {
 
 	// Pending actions: Player name to action map, used for commands which
 	// require action
-	public Map<String, ExpectingLocation> eLActions = new HashMap<String, ExpectingLocation>();
+	public Map<String, ExpectingLocation> eLActions = new HashMap<>();
 
 	@Override
 	public void onEnable() {
@@ -40,13 +41,17 @@ public final class Incorporate extends JavaPlugin {
 
 		// Setup db
 		MongoClient mongoClient = null;
+        String dbName = null;
 		try {
-			mongoClient = new MongoClient("localhost");
+            MongoClientURI uri = new MongoClientURI(this.getConfig().getString("database"));
+            getLogger().info(String.format("Using Database URI: %s", uri.toString()));
+            dbName = uri.getDatabase();
+			mongoClient = new MongoClient(uri);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 			getServer().getPluginManager().disablePlugin(this);
 		}
-		setupDatabase(mongoClient);
+		setupDatabase(mongoClient, dbName);
 
 		// Setup Listeners
 		new PlayerInteractListener(this);
@@ -63,7 +68,7 @@ public final class Incorporate extends JavaPlugin {
 		}
 	}
 
-	private void setupDatabase(MongoClient mongoCl) {
+	private void setupDatabase(MongoClient mongoCl, String dbName) {
 		// Initialize Morphia
 		Morphia morphia = new Morphia();
 		morphia.map(Company.class).map(LinkedChest.class);
@@ -72,7 +77,7 @@ public final class Incorporate extends JavaPlugin {
 		MapperOptions opts = new MapperOptions();
 		opts.objectFactory = new CustomCreator(this.getClassLoader());
 		Mapper mapper = new Mapper(opts);
-		Datastore ds = new DatastoreImpl(mapper, mongoCl, this.getConfig().getString("database"));
+		Datastore ds = new DatastoreImpl(mapper, mongoCl, dbName);
 
 		// Setup DAOs
 		companyDAO = new CompanyDAO(ds);

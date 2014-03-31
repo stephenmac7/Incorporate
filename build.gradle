@@ -1,4 +1,5 @@
 apply plugin: 'java'
+apply plugin: 'idea'
 apply plugin: 'eclipse'
 
 project.ext.HOME = "$System.env.HOME"
@@ -19,9 +20,9 @@ repositories {
 }
 
 dependencies {
-    compile 'org.mongodb.morphia:morphia:0.105'
-    compile 'org.mongodb:mongo-java-driver:2.11.3'
-    compile 'org.bukkit:bukkit:1.6.4-R2.0'
+    compile 'org.mongodb.morphia:morphia:0.107'
+    compile 'org.mongodb:mongo-java-driver:2.11.4'
+    compile 'org.bukkit:bukkit:1.7.2-R0.3'
     compile files('lib/Vault.jar')
 }
 

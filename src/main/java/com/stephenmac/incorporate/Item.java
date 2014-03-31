@@ -44,6 +44,6 @@ public class Item {
 	
 	@Override
 	public String toString(){
-		return String.format("%d:%d", this.id, this.data);
+		return String.format("%s:%d", this.id, this.data);
 	}
 }

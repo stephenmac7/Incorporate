@@ -1,5 +1,6 @@
 package com.stephenmac.incorporate.commands;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public abstract class Command {
 	// / Help Text
 	protected String usage = null;
 	// / Permissions required
-	protected List<Permission> perms = new ArrayList<Permission>();
+	protected List<Permission> perms = new ArrayList<>();
 
 	// / Requires a corporation?
 	protected boolean needsCorp = true;
@@ -43,11 +44,8 @@ public abstract class Command {
 	public abstract String execute();
 
 	public boolean validate() {
-		return (needsCorp ? (p.ensureCorp() && (validCorp ? getCompany() != null
-		        : true))
-		        : true)
-		        && (needsPlayer ? p.ensurePlayer() : true)
-		        && p.args.size() == getNArgs();
+        boolean corpValidated = !needsCorp || (p.ensureCorp() && (!validCorp || getCompany() != null));
+		return corpValidated && (!needsPlayer || p.ensurePlayer()) && (p.args.size() == getNArgs());
 	}
 
 	private int getNArgs() {
@@ -60,18 +58,18 @@ public abstract class Command {
 	public void cleanup() {
 		if (corp != null)
 			cmdExec.companyDAO.save(corp);
-	};
+	}
 
 	// / Messages
 	public String usageMessage() {
 		StringBuilder s = new StringBuilder();
-		s.append("/inc " + p.action);
+		s.append("/inc ").append(p.action);
 		if (needsCorp && !p.corpSelected)
 			s.append(" <company>");
 		if (needsPlayer && !p.senderIsPlayer)
 			s.append(" <player>");
 		if (usage != null)
-			s.append(" " + usage);
+			s.append(" ").append(usage);
 		return s.toString();
 	}
 
@@ -83,10 +81,20 @@ public abstract class Command {
 		StringBuilder r = new StringBuilder();
 		r.append("To run this command, you must have the corporate permissions:");
 		for (Permission p : perms) {
-			r.append("\n- " + p.toString());
+			r.append("\n- ").append(p.toString());
 		}
 		return r.toString();
 	}
+
+	// / General helper functions
+    protected double toAmount(String aString){
+        BigDecimal amount = new BigDecimal(aString);
+        int roundsTo = cmdExec.econ.fractionalDigits();
+        if (roundsTo > -1) {
+            amount = amount.setScale(roundsTo, BigDecimal.ROUND_HALF_UP);
+        }
+        return amount.doubleValue();
+    }
 
 	// / Company helper functions
 	protected Company getCompany() {
@@ -96,13 +104,13 @@ public abstract class Command {
 	}
 
 	public boolean checkPermission() {
-		return (!perms.isEmpty() && p.senderIsPlayer) ? p.player
-		        .hasPermission("inc.admin") || allPerms() : true;
+		return (!(!perms.isEmpty() && p.senderIsPlayer)) || p.player
+                .hasPermission("inc.admin") || allPerms();
 	}
 
 	protected boolean checkPermission(Permission perm) {
-		return p.senderIsPlayer ? p.player.hasPermission("inc.admin")
-		        || corp.hasPerm(p.playerName, perm) : true;
+		return !p.senderIsPlayer || p.player.hasPermission("inc.admin")
+                || corp.hasPerm(p.playerName, perm);
 	}
 
 	protected boolean allPerms() {
